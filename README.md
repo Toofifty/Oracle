@@ -9,23 +9,28 @@ Current features:
 
 Commands
 
-  ~ Emotes
+  ~ Emotes ~
+  
     ?fliptable      ?ohyou        ?crie      
     ?FLIPTABLE      ?fff          ?lenny
     ?puttableback   ?disapprove
   
-  ~ Server
+  ~ Server ~
+  
     ?events
     ?uhc
   
-  ~ Personal
+  ~ Personal ~
+  
     Nothing here yet-
   
-  ~ Other/fun
+  ~ Other/fun ~
+  
     ?help
     ?cb
   
-  ~ Admin
+  ~ Admin ~
+  
     ?close          ?makevar      ?repeat
     ?reload         ?getvar       
     ?attention      ?setvar
