@@ -6,30 +6,38 @@ Oracle - Spam Handler
 import json
 import sys
 import connect
+import threading
+import time
 
-users={}
+flood={}
+global active
+active=False
+
+class timeThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        c = loadconfig()
+        flood={}
+        while 1:
+            print flood
+            flood={}
+            time.sleep(c["interval"])
 
 def loadconfig():
-    with open('..\irc\config\spam.json', 'r') as conf_file:
+    with open('..\\bot\config\spam.json', 'r') as conf_file:
         c = json.load(conf_file)   
     return c
 
-def add_points(user, i):
-    try:
-        users[user] = users[user] + i
-    except:
-        users[user] = i
-
-def get_points(user):
-    try:
-        return users[user]
-    except:
-        return 0
-
-def start(user):
-    s = connect.getsocket()
-    c = loadconfig()
-    add_points(user, c["interval"])
-    if(get_points(user) >= c["kick"] * c["interval"]):
-        s.send("KICK %s" % user)
-        print ("KIC - User %s was kicked for spamming." % user)        
+def handler(nick):
+    if(nick) and not "esper.net" in nick:
+        if flood.has_key(nick):
+            c = loadconfig()
+            flood[nick] += 1
+            if flood[nick] > c["kick"]:
+                connect.kick(nick)
+                print ("KIC - User: " + nick + " was kicked for spamming")
+        else:
+            timeThread().start()
+            flood[nick] = 1
+    

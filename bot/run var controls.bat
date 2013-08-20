@@ -1,2 +1,0 @@
-python varcontrols.py
-pause
