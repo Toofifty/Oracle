@@ -38,13 +38,18 @@ Commands
 Functionalities
 
   ~ YouTube link to meta data conversion
+  
   ~ Pseudo/sudo commands ( ?^[user] [command] )
 
 Planned features:
 =================
+
   ~ Spam handler
+  
   ~ Auto kicks and bans
+  
   ~ IRC games
+  
   ~ Rank integration and restrictions
 
 License
