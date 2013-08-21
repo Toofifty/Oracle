@@ -1,2 +1,0 @@
-python oracle.py
-pause
