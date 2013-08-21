@@ -1,7 +1,7 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 """
-~ ?Oracle Bot v0.1 ~ #
+                    ~ ?Oracle Bot v0.1 ~ #
 written by Toofifty, primarily for use of the Rapidcraft Minecraft Server IRC
 http://rapidcraftmc.com/
 http://www.reddit.com/r/rapidcraft/
@@ -11,12 +11,11 @@ http://www.reddit.com/r/rapidcraft/
 from xml.dom import minidom
 import sys
 import string
+import os
 import urllib
 from datetime import datetime
 import time
 import calendar
-from colorama import init, Fore, Back
-init(autoreset=True)
 
 import connect
 import youtube
@@ -24,9 +23,31 @@ import cleverbot
 import varcontrols
 import spamhandler
 
-c = connect
 readbuffer=''
-last_nick=0
+last_user=0
+
+def say(msg):
+    s.send("PRIVMSG " + str(CHANNELINIT) + " :" + str(msg) + "\r\n")
+
+def whisper(msg, user):
+    s.send("NOTICE " + user + " :" + str(msg) + "\r\n")
+
+def stop(user):
+    print "!!! - Stop command issued! Closing."
+    say("Goodbye!")
+    s.send("QUIT\r\n")
+    sys.exit("!!! - " + user +" terminated session.")
+
+def restart(user):
+    print ("!!! - Restart command issued by " + user)
+    say("Restarting!")
+    s.send("QUIT\r\n")
+
+    args = sys.argv[:]
+    args.insert(0, sys.executable)
+    if sys.platform == 'win32':
+        args = ['"%s"' % arg for arg in args]
+    os.execv(sys.executable, args)
 
 def getText(nodelist):
     rc = []
@@ -35,146 +56,127 @@ def getText(nodelist):
             rc.append(node.data)
     return ''.join(rc)
 
-def events(nick):
-    try:
-        xmldoc = minidom.parse(urllib.urlopen('http://rapidcraftmc.com/api.php?events'))
-        dname = xmldoc.getElementsByTagName('name')[0]
-        dtime = xmldoc.getElementsByTagName('timestamp')[0]
-        u_time = getText(dtime.childNodes)
-        p_name = getText(dname.childNodes)
-        #print u_time
-        c.say("\x02Event\x02: " + p_name + " || \x02Time\x02: " + str(time.ctime(int(u_time))) + " UTC")
-    except:
-        c.say("\x02No events found\x02 - there may be none planned.")
-def timenow(nick): #
+def events(user):
+    xmldoc = minidom.parse(urllib.urlopen('http://rapidcraftmc.com/api.php?events'))
+    dname = xmldoc.getElementsByTagName('name')[0]
+    dtime = xmldoc.getElementsByTagName('timestamp')[0]
+    u_time = getText(dtime.childNodes)
+    p_name = getText(dname.childNodes)
+    #print u_time
+    say("Event: " + p_name + " || Time: " + str(time.ctime(int(u_time))) + " UTC")
+
+def timenow(user): #
     d = datetime.utcnow()
-    c.say(str(time.ctime(calendar.timegm(d.utctimetuple()))) + " UTC")
+    say(str(time.ctime(calendar.timegm(d.utctimetuple()))) + " UTC")
 
-def helpc(nick, args): #whisper command help to nick
+def helpc(user, args): #whisper command help to user
     if(len(args) < 1):
-        c.whisper("~ Welcome to the Oracle guide! Commands are categorised for neatness. Use ?help [category] to list those commands. ~",nick)
-        c.whisper("Categories: Emotes - Server - Personal - Other - Admin", nick)        
+        whisper("~ Welcome to the Oracle guide! Commands are categorised for neatness. Use ?help [category] to list those commands. ~",user)
+        whisper("Categories: Emotes - Server - Personal - Other - Admin", user)        
     elif(args.lower() == "emotes"):
-        c.whisper("~ Emotes ~", nick)
-        c.whisper("- ?fliptable > (╯°□°)╯︵ ┻━┻ ", nick)
-        c.whisper("- ?puttableback > ┬─┬﻿ ノ( ゜-゜ノ)", nick)
-        c.whisper("- ?ohyou > ¯_(ツ)_/¯", nick)
-        c.whisper("- ?fff > ლ(ಠ益ಠლ)", nick)
-        c.whisper("- ?disapprove > ಠ_ಠ", nick)
-        c.whisper("- ?crie > ಥ_ಥ", nick)
-        c.whisper("- ?lenny > ( ͡° ͜ʖ ͡°)", nick)
+        whisper("~ Emotes ~", user)
+        whisper("- ?fliptable > (╯°□°)╯︵ ┻━┻ ", user)
+        whisper("- ?puttableback > ┬─┬﻿ ノ( ゜-゜ノ)", user)
+        whisper("- ?ohyou > ¯_(ツ)_/¯", user)
+        whisper("- ?fff > ლ(ಠ益ಠლ)", user)
+        whisper("- ?disapprove > ಠ_ಠ", user)
+        whisper("- ?crie > ಥ_ಥ", user)
+        whisper("- ?lenny > ( ͡° ͜ʖ ͡°)", user)
     elif(args.lower() == "server"):
-        c.whisper("~ Server ~", nick)
-        c.whisper("- ?events > Next upcoming event", nick)
-        c.whisper("- ?utc > Time now, in UTC", nick)
+        whisper("~ Server ~", user)
+        whisper("- ?events > Next upcoming event", user)
+        whisper("- ?utc > Time now, in UTC", user)
     elif(args.lower() == "personal"):
-        c.whisper("~ Personal ~", nick)
-        c.whisper("- Nothing here yet! Here will be messages, reports, etc.", nick)
+        whisper("~ Personal ~", user)
+        whisper("- Nothing here yet! Here will be messages, reports, etc.", user)
     elif(args.lower() == "other"):
-        c.whisper("~ Other ~", nick)
-        c.whisper("- Nothing here yet! Here will be games, youtube linking, etc", nick)
-    elif(args.lower() == "admin") and (nick == "Toofifty" or nick == "Manyman" or nick == "Huppatz"):
-        c.whisper("~ Admin ~", nick)
-        c.whisper("- ?close > Turn off the Oracle bot", nick)
-        c.whisper("- ?reload > Restart the bot, to reload settings or code", nick)
+        whisper("~ Other ~", user)
+        whisper("- Nothing here yet! Here will be games, youtube linking, etc", user)
+    elif(args.lower() == "admin") and (user == "Toofifty" or user == "Manyman" or user == "Huppatz"):
+        whisper("~ Admin ~", user)
+        whisper("- ?close > Turn off the Oracle bot", user)
+        whisper("- ?reload > Restart the bot, to reload settings or code", user)
     else:
-        c.whisper("~ Welcome to the Oracle guide! Commands are categorised for neatness. Use ?help [category] to list those commands. ~",nick)
-        c.whisper("Categories: Emotes - Server - Personal - Other - Admin", nick) 
+        whisper("~ Welcome to the Oracle guide! Commands are categorised for neatness. Use ?help [category] to list those commands. ~",user)
+        whisper("Categories: Emotes - Server - Personal - Other - Admin", user) 
 
-def cb(ask, nick):
+def cb(ask, user):
     cbot = cleverbot.Session()
     response = cbot.Ask(ask)
-    c.say(nick + ": \x0309" + response)
+    say(response)
             
-def parsecmd(nick, msg): #command listing
+def parsecmd(user, msg): #command listing
     cmd = msg.split(" ")
     args = msg.split(" ",1)
-    print (Fore.MAGENTA + "CMD" + Fore.RESET + " - " + cmd[0] + " | nick: " + nick)
-    if cmd[0] == "?fliptable":
-        c.say("(╯°□°)╯︵ ┻━┻")
-        
-    elif cmd[0] == "?puttableback":
-        c.say("┬─┬﻿ ノ( ゜-゜ノ)")
-        
-    elif cmd[0] == "?help":
-        if(len(cmd) < 2):
-            helpc(nick, "no")
-        else:
-            helpc(nick, cmd[1])
+    print ("CMD - " + msg + " | User: " + user)
+    try:
+        if cmd[0] == "?fliptable":
+            say("(╯°□°)╯︵ ┻━┻")
+        elif cmd[0] == "?puttableback":
+            say("┬─┬﻿ ノ( ゜-゜ノ)")
+        elif cmd[0] == "?help":
+            if(len(cmd) < 2):
+                helpc(user, "no")
+            else:
+                helpc(user, cmd[1])
+        elif cmd[0] == "?close" and (user == "Toofifty" or user == "Manyman" or user == "Huppatz"):
+            stop(user)
+        elif cmd[0] == "?reload" and (user == "Toofifty" or user == "Manyman" or user == "Huppatz"):
+            restart(user)
+        elif cmd[0] == "?events":
+            events(user)
+        elif cmd[0] == "?utc":
+            timenow(user)
+        elif cmd[0] == "?ohyou":
+            say("¯_(ツ)_/¯")
+        elif cmd[0] == "?FLIPTABLE":
+            say("(ノಠ益ಠ)ノ彡┻━┻")
+        elif cmd[0] == "?fff":
+            say("ლ(ಠ益ಠლ)")
+        elif cmd[0] == "?disapprove":
+            say("ಠ_ಠ")
+        elif cmd[0] == "?crie":
+            say("ಥ_ಥ")
+        elif cmd[0] == "?lenny":
+            say("( ͡° ͜ʖ ͡°)")
             
-    elif cmd[0] == "?close" and (nick == "Toofifty" or nick == "Manyman" or nick == "Huppatz"):
-        c.stop(nick)
-        
-    elif cmd[0] == "?reload" and (nick == "Toofifty" or nick == "Manyman" or nick == "Huppatz"):
-        c.restart(nick)
-        
-    elif cmd[0] == "?events":
-        events(nick)
-        
-    elif cmd[0] == "?utc":
-        timenow(nick)
-        
-    elif cmd[0] == "?ohyou":
-        c.say("¯_(ツ)_/¯")
-        
-    elif cmd[0] == "?FLIPTABLE":
-        c.say("(ノಠ益ಠ)ノ彡┻━┻")
-        
-    elif cmd[0] == "?fff":
-        c.say("ლ(ಠ益ಠლ)")
-        
-    elif cmd[0] == "?disapprove":
-        c.say("ಠ_ಠ")
-        
-    elif cmd[0] == "?crie":
-        c.say("ಥ_ಥ")
-        
-    elif cmd[0] == "?lenny":
-        c.say("( ͡° ͜ʖ ͡°)")
-        
-    elif cmd[0] == "?makevar":
-        target = cmd[1]
-        if(varcontrols.makevarfile(nick, target)):
-            print (Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
-            c.whisper("VAR file successfully created for " + target, nick)
-        else:
-            print (Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
-            c.whisper("VAR file failed to create for " + target, nick)
+        elif cmd[0] == "?makevar":
+            target = cmd[1]
+            if(varcontrols.makevarfile(user, target)):
+                print ("!!! - New var file created for " + target + " by " + user)
+                whisper("VAR file successfully created for " + target, user)
+            else:
+                print ("!!! - Var file creation failed - " + user)
+                whisper("VAR file failed to create for " + target, user)
+                
+        elif cmd[0] == "?getvar":
+            response = varcontrols.getvar(user, cmd[1], cmd[2])
+            whisper("VAR: %s = %s" % (response, cmd[2]),user)
             
-    elif cmd[0] == "?getvar":
-        response = varcontrols.getvar(nick, cmd[1], cmd[2])
-        c.whisper("VAR: %s = %s" % (response, cmd[2]),nick)
-        
-    elif cmd[0] == "?setvar":
-        if(varcontrols.setvar(nick, cmd[1], cmd[2], cmd[3])):
-            c.whisper("VAR: %s set to %s for %s" % (cmd[1], cmd[2], cmd[3]), nick)
+        elif cmd[0] == "?setvar":
+            if(varcontrols.setvar(user, cmd[1], cmd[2], cmd[3])):
+                whisper("VAR: %s set to %s for %s" % (cmd[1], cmd[2], cmd[3]), user)
+            else:
+                whisper("Setting of variable failed.")
+            
+        elif cmd[0] == "?cb":
+            cb(args[1], user)
+            
+        elif cmd[0] == "?attention":
+            attention(user)
+            
+        elif cmd[0] == "?repeat":
+            say(str(args[1]))
+            
         else:
-            c.whisper("Setting of variable failed.")
-        
-    elif cmd[0] == "?cb":
-        cb(args[1], nick)
-        
-    elif cmd[0] == "?attention":
-        attention(nick)
-        
-    elif cmd[0] == "?say":
-        c.say(args[1])
-        
-    elif cmd[0] == "?formats":
-        c.say("\x02x02\x02 \x37xx37\x37 \x26x26\x26 \x17x17\x17 \x0301,02x0301,02\x0301,02 \x0303,04x0303,04\x0303,04  \x0305,06x0305,06\x0305,06  \x0307,08x0307,08\x0307,08 \x0309,10x0309,10\x0309,10 \x0311,12x0311,12\x0311,12 \x0313,14x0313,14\x0313,14  \x0315,00x0315,00\x0315,00")
-    
-    else:
-        c.whisper("Unknown command.", nick)
-    print (Fore.MAGENTA + "CMD" + Fore.RESET + " - Command parsed!")
-    #except:
-    #    e = sys.exc_info()[0]
-    #    print ( "!!! - Error: %s" % e )
-    #    whisper("I didn't understand that. Please contact an admin for help.",nick)
-   
-try:   
-    s, chan = c.start()
-except:
-    sys.exit(Fore.RED + "There was an error connecting to the server.")
+            whisper("Unknown command.", user)
+        print "CMD - Command parsed!"
+    except:
+        e = sys.exc_info()[0]
+        print ( "!!! - Error: %s" % e )
+        whisper("I didn't understand that. Please contact an admin for help.",user)
+       
+s, chan, pwd = connect.start()
        
 while 1: #listen looop
     readbuffer=readbuffer+s.recv(1024)
@@ -186,64 +188,43 @@ while 1: #listen looop
         line=string.split(line)
 
         if(line[0]=="PING"): #handle the occasional pings from the irc server
-            c.ping(line[1])
+            s.send("PONG %s\r\n" % line[1])
                         
-        elif(line[1]=="376" and line[2]=="Oracle"): #autojoin the channel
-            c.join()
+        if(line[1]=="376" and line[2]=="Oracle"): #autojoin the channel
+            s.send("JOIN %s\r\n" % chan)
 
-        elif(line[1]=="333" and line[3].startswith("#")): #identify once the channel is joined
-            c.identify()
-            
-        elif(line[1]=="366"): #welcome message once joined
-            c.say("\x0311Oracle bot has joined the session. Use \x0313?help\x0311 for guidance.\x0311")
+        if(line[1]=="333" and line[3].startswith("#")):
+            s.send("IDENTIFY Oracle "+pwd+"\r\n")
+            print "Identified"
             
         msgo=" ".join(line) #split and interpret raw messages
+        msg=msgo.split(chan+" :", 1)
         
         if (len(line) > 2):
-        
             no_colon_line = line[0].split(":", 1)
-            
             if (len(no_colon_line) >= 2):
-                nick = no_colon_line[1].split("!", 1)[0]
-            else:
-                nick = "null"
-                
-            if (line[2].startswith("#")):    
-                msg=msgo.split(chan+" :", 1)
-            else:
-                msg=msgo.split("Oracle :", 1)
-                
-        else:
-            nick = "null"
-        
-        if nick == "null":
-            break
-        
+                user = no_colon_line[1].split("!", 1)[0]
+            
         if (len(msg) >= 2):
             com = msg[1]
-            print (Fore.CYAN + "MSG" + Fore.RESET + " - [" + nick + "]: " + com)
+            print ("MSG - [" + user + "]: " + com)
         else:
             com = "none"
+            print ("SMG - " + msgo)
 
-        if(nick == last_nick):
-            #print "NCK - " + nick
-            spamhandler.handler(nick,msg)    
-        if(com.startswith("?^")): #?^target ?do do | nick
+        if(user == last_user):
+            spamhandler.start(user)    
+        if(com.startswith("?^")): #?^target ?do do | user
             comm = com.replace("?^","") #target ?do do
             pseudo = comm.split(" ",1) #target, ?do do
-            parsecmd(pseudo[0],pseudo[1]) #parse(nick: target, cmd: ?do do)
-        elif(com.startswith("?")): #?do | nick
-            parsecmd(nick, com)
-        
-        if(com == "nope"):
-            c.say("\x02nope.avi\x02 - http://www.youtube.com/watch?v=gvdf5n-zI14")
+            parsecmd(pseudo[0],pseudo[1]) #parse(user: target, cmd: ?do do)
+        elif(com.startswith("?")): #?do | user
+            parsecmd(user, com)
+
         if(com.startswith("http://www.youtube.com/")):
             try:
                 author, title = youtube.parselink(com)
-                c.say("\x0304\x02YouTube Video\x02\x03 - " + title + " by " + author + " - " + com.split(" ",1)[0])
+                say("\x02YouTube\x02 Video - " + title + " by " + author + " - " + com.split(" ",1)[0])
             except:
-                c.say("\x0304Youtube video failed\x0304 - 404 Not Found")
-                
-        last_nick = nick
-
-connect.stop("Auto")
+                say("Youtube video failed - 404 Not Found")
+        last_user = user
