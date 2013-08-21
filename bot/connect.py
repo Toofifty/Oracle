@@ -12,7 +12,7 @@ from colorama import init, Fore, Back
 init(autoreset=True)
 
 def loadconfig():
-    with open('..\\bot\config\config.json', 'r') as conf_file:
+    with open('../bot/config/config.json', 'r') as conf_file:
         c = json.load(conf_file)   
     return c
     

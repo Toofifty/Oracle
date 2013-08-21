@@ -31,7 +31,7 @@ class timeThread(threading.Thread):
             time.sleep(c['interval'])
 
 def loadconfig():
-    with open('..\\bot\config\spam.json', 'r') as conf_file:
+    with open('../bot/config/spam.json', 'r') as conf_file:
         c = json.load(conf_file)   
     return c
     
