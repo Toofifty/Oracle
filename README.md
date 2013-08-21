@@ -28,10 +28,11 @@ Commands
   
     ?help
     ?cb
+	?formats
   
   ~ Admin ~
   
-    ?close          ?makevar      ?repeat
+    ?close          ?makevar      ?say
     ?reload         ?getvar       
     ?attention      ?setvar
 
@@ -40,17 +41,21 @@ Functionalities
   ~ YouTube link to meta data conversion
   
   ~ Pseudo/sudo commands ( ?^[user] [command] )
-
-Planned features:
-=================
-
+  
   ~ Spam handler
+
+Planned features/TO DO:
+=======================
   
   ~ Auto kicks and bans
   
   ~ IRC games
   
   ~ Rank integration and restrictions
+  
+  ~ Leave a message/announcement
+  
+  ~ Split and clean code ;D
 
 License
 =======
