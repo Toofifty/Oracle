@@ -1,5 +1,5 @@
 {
-    "interval": 3,
+    "interval": 10,
     "warn": 3,
     "kick": 5,
     "ban": 2
