@@ -72,7 +72,7 @@ def handler(nick,msg):
                 connect.say('\x0308User \x0304' + nick + ' \x0308was kicked for spamming.')
                 print (Fore.RED + 'KCK' + Fore.RESET + ' - User: ' + nick + ' was kicked for spamming')
             elif r > c['warn']:
-                connect.whisper('\x0308Please slow down with your messages, or else you'll be kicked.\x0308',nick)
+                connect.whisper('\x0308Please slow down with your messages, or else you\'ll be kicked.\x0308',nick)
         else:
             global active
             if not active:
