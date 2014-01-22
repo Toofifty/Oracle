@@ -15,6 +15,10 @@ def loadconfig():
     with open('../bot/config/config.json', 'r') as conf_file:
         c = json.load(conf_file)   
     return c
+
+def getusers():
+    c = loadconfig()
+    s.send("NAMES " + c["channel"] + "\r\n")
     
 def say(msg):
     s.send("PRIVMSG " + str(c["channel"]) + " :" + str(msg) + "\r\n")
@@ -46,6 +50,7 @@ def restart(nick):
 
 def identify():
     s.send("IDENTIFY Oracle %s\r\n" % c["pass"])
+    print ("identified")
 
 def ping(id):
     s.send("PONG %s\r\n" % id)

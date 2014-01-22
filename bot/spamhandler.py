@@ -53,10 +53,11 @@ def flood_(type, nick):
             return False
     else:
         if not flood == {}:
-            print flood
+            pass
+            #print flood
         flood = {}
         return True
-    print flood
+    #print flood
     
 def handler(nick,msg):
     global last_msg
@@ -66,7 +67,7 @@ def handler(nick,msg):
             r = flood_('add',nick)
             if (msg == last_msg):
                 r = flood_('add',nick)
-                print (nick + ' repeated a message.')
+                print (Fore.RED + 'SPM' + Fore.RESET + ' - ' + nick + ' repeated a message.')
             if r > c['kick']:
                 connect.kick(nick)
                 connect.say('\x0308User \x0304' + nick + ' \x0308was kicked for spamming.')

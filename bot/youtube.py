@@ -5,7 +5,7 @@ Oracle - YouTube Link Converter
 
 import urllib, json
 
-def parselink(url):
+def processlink(url):
     meta_data_link = ('http://www.youtube.com/oembed?url=%s&format=json' % url)
     #print meta_data_link
     
