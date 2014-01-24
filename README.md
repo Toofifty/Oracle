@@ -2,10 +2,11 @@
 Toofifty's Oracle Bot
 =====================
 
-Oracle IRC bot for #rapidcraft
+Oracle IRC bot for #rapidcraft, used to moderate and automate some actions within the chat.
+Requires Python 2.7, multiplatform
 
-Current features:
-=================
+Current features
+================
 
 Commands
 --------
@@ -78,8 +79,8 @@ Functionalities
 	
 	Only crashes sometimes
 
-Planned features/TO DO:
-=======================
+Planned features/TO DO
+======================
   
     IRC games
   
