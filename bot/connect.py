@@ -49,7 +49,7 @@ def restart(nick):
     os.execv(sys.executable, args)
 
 def identify():
-    s.send("IDENTIFY Oracle %s\r\n" % c["pass"])
+    s.send("MSG nickserv IDENTIFY %s\r\n" % c["pass"])
     print ("identified")
 
 def ping(id):
@@ -58,18 +58,25 @@ def ping(id):
 def join():
     s.send("JOIN %s\r\n" % c["channel"])
     
+def mode(args):
+    c= loadconfig()
+    s.send("MODE " + c["channel"] + " " + " ".join(args) + "\r\n")
+    
+def raw(args):
+    s.send(" ".join(args) + "\r\n")
+    
 def start():
     global c
     c = loadconfig()
-    #try:
-    global s
-    s = socket.socket()
-    s.connect((c["host"], c["port"]))
-    s.send('NICK '+c["nick"]+'\r\n')
-    s.send('USER '+c["ident"]+' '+c["host"]+' bla :'+c["realname"]+'\r\n')
-    return s, c["channel"]
-    #except:
-    #    print ("!!! - Error! Failed to connect to " + c["channel"] + " on " + c["host"])
-    #    return False
+    try:
+        global s
+        s = socket.socket()
+        s.connect((c["host"], c["port"]))
+        s.send('NICK '+c["nick"]+'\r\n')
+        s.send('USER '+c["ident"]+' '+c["host"]+' bla :'+c["realname"]+'\r\n')
+        return s, c["channel"]
+    except:
+        print ("!!! - Error! Failed to connect to " + c["channel"] + " on " + c["host"])
+        return False
         
 start()

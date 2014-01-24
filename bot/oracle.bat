@@ -1,3 +1,5 @@
 @echo off
-python oracle.py
+:DEBUG
+python run.py
 pause
+goto DEBUG

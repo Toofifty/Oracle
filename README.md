@@ -8,54 +8,84 @@ Current features:
 =================
 
 Commands
+--------
 
-  ~ Emotes ~
+    Emotes: 
+	
+    ?fliptable      ?ohyou			?crie			?butterfly		?gun
+    ?FLIPTABLE      ?fff        	?lenny			?partytime		?pirate
+    ?puttableback   ?disapprove 	?dongers		?polarbear		?happybirthday
+    ?sunglasses	    ?rage			?cards			?gimme			?monocle
+    ?ghost		    ?why			?praise			?lennyy			?fliptables
+    ?tears (admin only)
   
-    ?fliptable      ?ohyou        ?crie      
-    ?FLIPTABLE      ?fff          ?lenny
-    ?puttableback   ?disapprove
+    Server:
   
-  ~ Server ~
+    ?events 		?nether			?poll
+    ?uhc			?overworld
   
-    ?events
-    ?uhc
+    Personal:
   
-  ~ Personal ~
+    ?notes
+	?mail
   
-    Nothing here yet-
+    Other/fun:
   
-  ~ Other/fun ~
-  
-    ?help
+    ?help			?diamonds (rickroll)
     ?cb
-	?formats
+	?pick
   
-  ~ Admin ~
+    Admin:
   
-    ?close          ?makevar      ?say
-    ?reload         ?getvar       
-    ?attention      ?setvar
+    ?close			?say			?ban
+	?reload			?attention		?kick
+	?restart		?setrank
+	
+	Developer:
+	
+	?makevar		?deletevar		?cls			?raw
+	?getvar			?resetvar		?sayr
+	?setvar			?formats		?join
 
 Functionalities
+---------------
 
-  ~ YouTube link to meta data conversion
+    Grab Youtube video meta-data after posting a link
   
-  ~ Pseudo/sudo commands ( ?^[user] [command] )
+    Sudo commands ( ?^[user] [command] )
   
-  ~ Spam handler
+    Spam handler
+	
+	Mail system + check on join
+	
+	Notes system
+	
+	Configurable IRC options
+	
+	Per-user variables (rank, etc)
+	
+	Clean cmd output
+	
+	Reload without leaving IRC session
+	
+	Auto-kicking of banned (rank: 0) users
+	
+	Auto-opping of admin+ (rank: 3) users
+	
+	Cleverbot integration (broken)
+	
+	Easy in-code formatting
+	
+	Only crashes sometimes
 
 Planned features/TO DO:
 =======================
   
-  ~ Auto kicks and bans
+    IRC games
   
-  ~ IRC games
-  
-  ~ Rank integration and restrictions
-  
-  ~ Leave a message/announcement
-  
-  ~ Split and clean code ;D
+    Leave a message/announcement
+	
+	Server chat integration and moderation
 
 License
 =======

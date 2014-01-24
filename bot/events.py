@@ -4,6 +4,7 @@ Oracle - Event grabber
 """
 
 import time
+import calendar
 from datetime import datetime
 from xml.dom import minidom
 
@@ -28,4 +29,4 @@ def get():
         
 def utc():
     d = datetime.utcnow()
-    return (str(time.ctime(calendar.timegm(d.utctimetuple()))) + " UTC")
+    return (str(time.ctime(calendar.timegm(d.utctimetuple()))))
