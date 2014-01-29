@@ -7,7 +7,7 @@ import os
 import json
 from pprint import pprint
 
-def makevarfile(nick, target):
+def makevarfile(target):
     if not(os.path.exists('../bot/users/' + target + '.json')):
         f = file('../bot/users/' + target + '.json', 'w')
         f.write('{\"spam\": 0, \"kicks\": 0, \"banned\": false, \"rank\": 1, \"ircp\": 0}')
@@ -16,7 +16,7 @@ def makevarfile(nick, target):
     else:
         return False
     
-def setvar(nick, target, var, val): #set specific values for users
+def setvar(target, var, val): #set specific values for users
     try:
         if not(os.path.exists('../bot/users/' + target + '.json')):
             makevarfile(target)    
@@ -29,11 +29,11 @@ def setvar(nick, target, var, val): #set specific values for users
     except:
         return False
 
-def getvar(nick, target, var):
+def getvar(target, var):
     try:
         if not(os.path.exists('../bot/users/' + target + '.json')):
             makevarfile(nick, target)
-            getvar(nick, target, var)
+            getvar(target, var)
         else:
             with open('../bot/users/' + target + '.json') as data_file:    
                 data = json.load(data_file)
@@ -41,7 +41,20 @@ def getvar(nick, target, var):
     except:
         return False
         
-def deletevarfile(nick, target):
+def listvar(target):
+    try:
+        if not(os.path.exists('../bot/users/' + target + '.json')):
+            makevarfile(nick, target)
+            getvar(target, var)
+        else:
+            with open('../bot/users/' + target + '.json') as data_file:    
+                data = json.load(data_file)
+        return data
+    except:
+        return False
+    
+        
+def deletevarfile(target):
     if os.path.exists('../bot/users/' + target + '.json'):
         os.remove('../bot/users/' + target + '.json')
         return True

@@ -15,8 +15,8 @@ import urllib
 import traceback
 import time
 import calendar
-import random
 import os
+import logging
 from colorama import init, Fore, Back
 init(autoreset=True)
 
@@ -33,12 +33,15 @@ import misc
     
 f = format.formats()
 
+def log(msg):
+    print("[" + time.ctime() + "] " + msg)
+
 def rl(nick):
     c.say(f.YELLOW + "Reloading!")
     modules = [m, e, v, n, youtube, cleverbot, spamhandler, format, misc]
     for mod in modules:
         reload(mod)
-    print(Fore.RED + "RLD" + Fore.RESET + " - Reload issued by " + nick)
+    log(Fore.RED + "RLD" + Fore.RESET + " Reload issued by " + nick)
         
     global do_reload
     do_reload = True
@@ -98,6 +101,7 @@ def helpc(nick, args):
         c.whisper("- ?pick [choice 1] [choice 2] ... [choice n] > Picks a choice at random", nick)
         c.whisper("- ?cb [message] > Chat with cleverbot (experimental)", nick) 
         c.whisper("- ?diamonds [target] > Gives target 64 diamonds in-game", nick) 
+        c.whisper("- ?ayylmao > Link to ayy lmao image", nick) 
     elif(args.lower() == "admin") and (rank >= 2):
         c.whisper("~ \x02Admin\x02 ~", nick)
         c.whisper("- ?close > Turn off the Oracle bot", nick)
@@ -118,7 +122,7 @@ def helpc(nick, args):
         c.whisper("- ?sayr > Instruct Oracle to repeat the message (+ formats). See ?help formats", nick)
         c.whisper("- ?join > Imitate a join event", nick)
         c.whisper("- ?raw [args] > Send a raw message to IRC from Oracle", nick)
-        c.whisper("- ?^[target] ?[cmd] > Psuedo any command onto another user", nick)
+        c.whisper("- ?^[target] ?[cmd] > Sudo any command onto another user", nick)
     elif(args.lower() == "formats") and (rank >= 3):
         c.whisper("~ \x02Formats\x02 ~", nick)
         c.whisper("- Formats are activated by using &N where N is 0-15 or b.", nick)
@@ -146,7 +150,7 @@ Asks cleverbot a question, and prints and says the response (broken)
 def cb(ask, nick):
     cbot = cleverbot.Session()
     response = cbot.Ask(ask)
-    print (Fore.CYAN + "CBT" + Fore.RESET + " - " + response)
+    log(Fore.CYAN + "CBT" + Fore.RESET + " " + response)
     c.say(nick + ": " + response)
 
 """
@@ -155,7 +159,7 @@ Actions to perform on user join
 def join(nick):
     rank = v.getrank(nick)
     c.say("welcome")
-    print(Fore.BLUE + "JNC" + Fore.RESET + " - " + nick + " joined. Rank: " + str(rank))
+    log(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))
     if rank == 0:
         c.kick(nick)
     elif rank >= 3:
@@ -176,7 +180,7 @@ def processcmd(nick, msg):
     cmd = msg.split(" ")
     args = cmd[1:]
     rank = v.getrank(nick)
-    print (Fore.MAGENTA + "CMD" + Fore.RESET + " - " + cmd[0] + " | nick: " + nick)
+    log(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | nick: " + nick)
     
     try:
         # emotes #
@@ -215,8 +219,7 @@ def processcmd(nick, msg):
         elif cmd[0] == "?cb": cb(args[1], nick)
         
         elif cmd[0] == "?pick":
-            choice = random.randint(1, len(cmd))
-            c.say(nick + ": " + cmd[choice] + " (" + str(choice) + ") ")
+            c.say(nick + ": " + misc.pick(cmd[1:]))
             
         elif cmd[0] == "?diamonds":
             if rank == 4:
@@ -275,6 +278,8 @@ def processcmd(nick, msg):
             c.whisper(cmd[1] + "'s rank set to " + cmd[2] + ".", nick)
         elif cmd[0] == "?mode" and (rank >= 3):
             c.mode(cmd[1:])
+        elif cmd[0] == "?alien" or cmd[0] == "?ayylmao":
+            c.say("http://puu.sh/6wo5D.png")
             
         # server #
         elif cmd[0] == "?events":
@@ -296,16 +301,20 @@ def processcmd(nick, msg):
         # dev #
         elif cmd[0] == "?makevar" and (rank >= 4):
             target = cmd[1]
-            if(v.makevarfile(nick, target)):
-                print (Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
+            if(v.makevarfile(target)):
+                log(Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
                 c.whisper("VAR file successfully created for " + target, nick)
             else:
-                print (Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
+                log(Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
                 c.whisper("VAR file failed to create for " + target, nick)
                 
         elif cmd[0] == "?getvar" and (rank >= 4):
-            response = v.getvar(nick, cmd[1], cmd[2])
+            response = v.getvar( cmd[1], cmd[2])
             c.whisper("VAR: %s = %s" % (cmd[2], response),nick)
+                
+        elif cmd[0] == "?listvar" and (rank >= 4):
+            response = v.listvar(cmd[1])
+            c.whisper(response, nick)
             
         elif cmd[0] == "?setvar":
             if(v.setvar(nick, cmd[1], cmd[2], int(cmd[3]))):
@@ -314,22 +323,22 @@ def processcmd(nick, msg):
                 c.whisper("Setting of variable failed.", nick)
                 
         elif cmd[0] == "?deletevar" and (rank >= 4):
-            if(v.deletevarfile(nick, cmd[1])):
+            if(v.deletevarfile(cmd[1])):
                 c.whisper("VAR file successfully deleted.", nick)
             else:
                 c.whisper("VAR file deletion failed.", nick)
             
         elif cmd[0] == "?resetvar" and (rank >= 4):
             target = cmd[1]
-            if(v.deletevarfile(nick, target)):
+            if(v.deletevarfile(target)):
                 c.whisper("VAR file successfully deleted.", nick)
             else:
                 c.whisper("VAR file deletion failed.")
-            if(v.makevarfile(nick, target)):
-                print (Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
+            if(v.makevarfile(target)):
+                log(Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
                 c.whisper("VAR file successfully created for " + target, nick)
             else:
-                print (Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
+                log(Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
                 c.whisper("VAR file failed to create for " + target, nick)
                 
         elif cmd[0] == "?formats" and (rank >= 4):
@@ -343,7 +352,7 @@ def processcmd(nick, msg):
             
         elif cmd[0] == "?join" and (rank >= 4): join(nick)
         elif cmd[0] == "?raw" and (rank >= 4): c.raw(cmd[1:])
-          
+      
         # personal #
         elif cmd[0] == "?mail":
             try:
@@ -420,7 +429,7 @@ def mainloop(s, chan, welcomed):
         try:
             readbuffer = readbuffer+s.recv(1024)
         except:
-            print(Fore.RED + "THR" + Fore.RESET + " - Cannot connect, throttled by server")
+            log(Fore.RED + "THR" + Fore.RESET + " Cannot connect, throttled by server")
             break
         temp = string.split(readbuffer, "\n")
         readbuffer = temp.pop()
@@ -440,8 +449,6 @@ def mainloop(s, chan, welcomed):
                 welcomed = True
             elif ("JOIN" in line or ":JOIN" in line) and not ("Oracle" in msgo):
                 join(line[0].split(":",1)[1].split("!",1)[0])
-            elif "huppatz" in msgo:
-                c.say("welcome")
             
             if (len(line) > 2):
                 col_split = line[0].split(":", 1)
@@ -461,28 +468,55 @@ def mainloop(s, chan, welcomed):
             
             if (len(msg) >= 2):
                 com = msg[1]
-                print (Fore.CYAN + "MSG" + Fore.RESET + " - [" + nick + "]: " + com)
+                log(Fore.CYAN + "MSG" + Fore.RESET + " <" + nick + "> " + com)
             else:
                 com = "none"
 
-            if(nick == last_nick):
+            if(nick == "RapidIRC"):
+                if com.startswith("<"):
+                    nick, com = com.split("<",1)[1].split("> ",1)
+                    log("In-game command - " + nick + ", com - " + com)
+                    c.setactive()
+            else:
+                c.setinactive()
+                
+            if(nick == last_nick and not c.getactive()):
                 spamhandler.handler(nick,msg) 
                 
             if(com.startswith("?^") and v.getrank(nick) >= 4): # ?^target ?cmd args | nick
                 comm = com.replace("?^","") # target ?cmd args
-                pseudo = comm.split(" ",1) # target, ?cmd args
-                processcmd(pseudo[0],pseudo[1]) # process(nick: target, cmd: ?cmd args)
+                sudo = comm.split(" ",1) # target, ?cmd args
+                processcmd(sudo[0],sudo[1]) # process(nick: target, cmd: ?cmd args)
                 
             elif(com.startswith("?")):
                 processcmd(nick, com) # ?cmd | nick
             
-            if(com == "nope"):
-                c.say("\x02nope.avi\x02 - http://www.youtube.com/watch?v=gvdf5n-zI14") # gag
+            #gags
+            if(com.lower() == "nope"):
+                c.say("\x02nope.avi\x02 - http://www.youtube.com/watch?v=gvdf5n-zI14")
+            elif(com.lower() == "nice"):
+                c.say("nice - http://www.youtube.com/watch?v=jjtkMCLRf-M")
+            elif(com.lower() == "alrighty then"):
+                c.say("alrighty then - http://www.youtube.com/watch?v=hS1okqbnePQ")
+            elif(com.lower() == "noice"):
+                c.say("noice - http://www.youtube.com/watch?v=rQnYi3z56RE")
+            elif(com.lower() == "thanks oracle"):
+                c.say(misc.pick(("No worries mate!","No problem!","T'was a pleasure.","You're welcome!")))
+            elif(com.lower() == "nice work oracle" or com.lower() == "well done oracle"):
+                c.say(misc.pick(("Thanks man!","Thanks, appreciate it.","Why, thank you sir!")))
+            elif(com.lower() == "bye" or com.lower() == "later" or com.lower() == "cya"):
+                c.say(misc.pick(("Ciao!","Adios!","Tschüss!","Despedida!","Hasta la Vista!","Au Revoir!","Farewell!","Cya!")))
+            elif("alrighty" in com):
+                c.say("Alrightyroo")
+            elif(com.lower() == "welcome"):
+                c.say("Welcome " + nick + " to the server!")
+            elif(com.lower() == "oracle"):
+                c.say("Yes?")
                 
             if(com.startswith("http://www.youtube.com/")):
                 try:
                     author, title = youtube.processlink(com)
-                    c.say("\x0304\x02YouTube Video\x02\x03 - " + title + " by " + author + " - " + com.split(" ",1)[0])
+                    c.say("\x0304\x02YouTube Video\x02\x03 - " + title + " by " + author)
                 except:
                     c.say("\x0304Youtube video failed\x0304 - 404 Not Found")
                     

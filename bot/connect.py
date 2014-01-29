@@ -11,6 +11,31 @@ import spamhandler
 from colorama import init, Fore, Back
 init(autoreset=True)
 
+class gamechat(object):
+    def __init__(self):
+        self.active = False
+        
+    def __active(self):
+        self.active = True
+        
+    def __inactive(self):
+        self.active = False
+        
+    def __get(self):
+        return self.active
+        
+gc = gamechat()
+
+def setactive():
+    gc.active = True
+    #gc.__active()
+def setinactive():
+    gc.active = False
+    #gc.__inactive()
+def getactive():
+    #return gc.__get()
+    return gc.active
+
 def loadconfig():
     with open('../bot/config/config.json', 'r') as conf_file:
         c = json.load(conf_file)   
@@ -25,7 +50,10 @@ def say(msg):
     
     
 def whisper(msg, nick):
-    s.send("NOTICE " + nick + " :" + str(msg) + "\r\n")
+    if (gc.active):
+        s.send("PRIVMSG RapidIRC :" + nick + " " + str(msg) + "\r\n")
+    else:
+        s.send("NOTICE " + nick + " :" + str(msg) + "\r\n")
     
 def kick(nick):
     c= loadconfig()

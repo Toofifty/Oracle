@@ -1,5 +1,6 @@
 import oracle
 import connect
+import traceback
 
 def run():
     try:
@@ -8,11 +9,14 @@ def run():
         sys.exit("There was an error connecting to the server.")
     w = False
     while True:
-        rel = oracle.main(s, chan, w)
-        if rel:
-            reload(oracle) 
-            print("!!! - Reload complete")
-        else:
-            print("Process quit.")
-    
+        try:
+            rel = oracle.main(s, chan, w)
+            if rel:
+                reload(oracle) 
+                print("!!! - Reload complete")
+            else:
+                print("Process quit.")
+        except:
+            traceback.print_exc()
+            
 run()
