@@ -3,6 +3,8 @@ import random
 class formats(object):
     def __init__(self):
         self.BOLD = "\x02"
+        self.ITALICS = "\x1D"
+        self.UNDERLINE = "\x1F"
         self.BLACK = "\x0301"
         self.DARKBLUE = "\x0302"
         self.DARKGREEN = "\x0303"
@@ -27,6 +29,8 @@ def replace(string):
     f = formats()
     array = [
         ["&b", f.BOLD],
+        ["&i", f.ITALICS],
+        ["&u", f.UNDERLINE],
         ["&15", f.GREY],
         ["&14", f.DARKGREY],
         ["&13", f.PINK],

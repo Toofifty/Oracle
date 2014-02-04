@@ -1,2 +1,2 @@
-python varcontrols.py
+python cleverbot2.py
 pause

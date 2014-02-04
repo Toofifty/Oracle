@@ -5,5 +5,12 @@
     "ident": "Oracle",
 	"pass": "wombat1",
     "realname": "Toofifty",
-    "channel": "#rapidcraft"
+    "channel": "#rapid",
+	"aop": 0,
+	"akick": 0,
+	"whitelist": 1,
+	"check mail on join": 1,
+	"say welcome": 1,
+	"use colours": 1,
+    "translate": 0
 }

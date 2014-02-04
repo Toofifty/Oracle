@@ -1,0 +1,49 @@
+New additions to the server - RapidIRC and Oracle bot
+
+As some might have known, the community has an IRC (Internet Relay Chat) channel which was never really used to it's full potential. Earlier this week, Manyman and I have been working on a plugin to integrate the server chat with the IRC, in order to broaden to a community chat where we can all be in - regardless of the game we're playing.
+If you join the IRC channel [#rapid](http://rapidcraftmc.com/chat.php) you will find 3 strange users; Oracle, RapidSurvival and RapidCreative. Oracle is an IRC bot created by me that can be used to take notes, show smileys, and maintain the IRC. RapidSurvival and RapidCreative are 'linking' bots that connect their respective worlds with the IRC.
+
+To use these new functions, there's a few simple commands to know which I'll be going through briefly.
+
+**Here are the commands for RapidIRC**
+
+For in-game:
+
+    /irc list
+    /imsg [user] [message...]
+	
+The first command will return a list of all the users in the IRC.
+The second will private-message a user that is on the IRC channel. It still tries to send the message regardless of whether you typed the username correctly or not, yet capitalization is ignored.
+
+For IRC:
+
+    /msg [RapidSurvival/RapidCreative] [user] [message...]
+	
+This command will private-message a user that is in-game, and play a sound to alert them. If your IRC client creates a personal chat with either of the bots, you can just use:
+
+    [user] [message...]
+	
+As you are already private-messaging the bot.
+
+**Oracle**
+
+Oracle is a bit more interactive and all the commands can be accessed through any of these characters/phrases:
+
+    ?[cmd]
+    ![cmd]
+	Oracle, [cmd]
+	
+The Oracle bot has a built in help-guide to allow quick access to any commands required. It uses categories to separate different types of commands. These categories are:
+
+    ?help emotes
+    ?help server
+    ?help personal
+    ?help other
+	
+*Emotes* contains a list of the available emotes and their commands. Please note that this command (`?help emotes`) fails if done in-game due to a bug, and also that many of the symbols used are displayed incorrectly in Minecraft's font.
+
+*Server* contains commands relating to server events and small, useful tools.
+
+*Personal* contains access to `?notes` and `?mail` two very useful functions in Oracle.
+
+*Other* contains silly and maybe useless stuff.

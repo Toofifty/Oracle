@@ -8,6 +8,7 @@ import sys
 import json
 import os
 import spamhandler
+import yaml
 from colorama import init, Fore, Back
 init(autoreset=True)
 
@@ -26,38 +27,41 @@ class gamechat(object):
         
 gc = gamechat()
 
-def setactive():
-    gc.active = True
-    #gc.__active()
-def setinactive():
-    gc.active = False
-    #gc.__inactive()
 def getactive():
     #return gc.__get()
     return gc.active
+    
+def set_active(bot):
+    gc.active = bot
+    
+def set_inactive():
+    gc.active = False
 
 def loadconfig():
-    with open('../bot/config/config.json', 'r') as conf_file:
-        c = json.load(conf_file)   
+    with open('../bot/config/config.yml', 'r') as conf_file:
+        c = yaml.load(conf_file)
+    #with open('../bot/config/config.json', 'r') as conf_file:
+    #    c = json.load(conf_file)   
     return c
 
 def getusers():
     c = loadconfig()
-    s.send("NAMES " + c["channel"] + "\r\n")
+    #s.send("NAMES " + c['channel'] + "\r\n")
     
 def say(msg):
-    s.send("PRIVMSG " + str(c["channel"]) + " :" + str(msg) + "\r\n")
+    s.send("PRIVMSG " + str(c['channel']) + " :" + str(msg) + "\r\n")
+    print("<< PRIVMSG " + str(c['channel']) + " :" + str(msg))
     
     
 def whisper(msg, nick):
-    if (gc.active):
-        s.send("PRIVMSG RapidIRC :" + nick + " " + str(msg) + "\r\n")
-    else:
+    if not (gc.active):
         s.send("NOTICE " + nick + " :" + str(msg) + "\r\n")
+    else:
+        s.send("PRIVMSG " + gc.active + " :" + nick + " " + str(msg) + "\r\n")
     
-def kick(nick):
+def kick(nick, reason):
     c= loadconfig()
-    s.send("KICK %s %s\r\n" % (c["channel"],nick))
+    s.send("KICK %s %s %s\r\n" % (c['channel'],nick, reason))
 
 def stop(nick):
     print "!!! - Stop command issued! Closing."
@@ -77,18 +81,18 @@ def restart(nick):
     os.execv(sys.executable, args)
 
 def identify():
-    s.send("MSG nickserv IDENTIFY %s\r\n" % c["pass"])
-    print ("identified")
+    s.send("nickserv IDENTIFY Oracle %s\r\n" % c['pass'])
+    return True
 
 def ping(id):
     s.send("PONG %s\r\n" % id)
     
 def join():
-    s.send("JOIN %s\r\n" % c["channel"])
+    s.send("JOIN %s\r\n" % c['channel'])
     
 def mode(args):
     c= loadconfig()
-    s.send("MODE " + c["channel"] + " " + " ".join(args) + "\r\n")
+    s.send("MODE " + c['channel'] + " " + " ".join(args) + "\r\n")
     
 def raw(args):
     s.send(" ".join(args) + "\r\n")
@@ -99,12 +103,12 @@ def start():
     try:
         global s
         s = socket.socket()
-        s.connect((c["host"], c["port"]))
-        s.send('NICK '+c["nick"]+'\r\n')
-        s.send('USER '+c["ident"]+' '+c["host"]+' bla :'+c["realname"]+'\r\n')
-        return s, c["channel"]
+        s.connect((c["host"], c['port']))
+        s.send('NICK '+c['nick']+'\r\n')
+        s.send('USER '+c['ident']+' '+c['host']+' bla :'+c['realname']+'\r\n')
+        return s, c
     except:
-        print ("!!! - Error! Failed to connect to " + c["channel"] + " on " + c["host"])
+        print ("!!! - Error! Failed to connect to " + c['channel'] + " on " + c['host'])
         return False
         
 start()

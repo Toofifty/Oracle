@@ -4,13 +4,13 @@ import traceback
 
 def run():
     try:
-        s, chan = connect.start()
+        s, c = connect.start()
     except:
         sys.exit("There was an error connecting to the server.")
-    w = False
+        
     while True:
         try:
-            rel = oracle.main(s, chan, w)
+            rel = oracle.main(s, c)
             if rel:
                 reload(oracle) 
                 print("!!! - Reload complete")

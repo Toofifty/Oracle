@@ -10,7 +10,7 @@ from pprint import pprint
 def makevarfile(target):
     if not(os.path.exists('../bot/users/' + target + '.json')):
         f = file('../bot/users/' + target + '.json', 'w')
-        f.write('{\"spam\": 0, \"kicks\": 0, \"banned\": false, \"rank\": 1, \"ircp\": 0}')
+        f.write('{\"spam\": 0, \"kicks\": 0, \"banned\": false, \"rank\": 1, \"ircp\": 0, \"alias\": \"' + target + '\"}')
         f.close()
         return True
     else:

@@ -1,0 +1,45 @@
+# bot info, don't change
+host: 'irc.esper.net'
+port: 6667
+nick: 'Oracle'
+ident: 'Oracle'
+pass: 'wombat1'
+realname: 'Toofifty'
+channel: '#rapid'
+
+# admin
+server-bots:
+    - 'RapidCreative'
+    - 'RapidSurvival'
+
+# spam handler
+enabled: true
+interval: 3
+warn: 3
+kick: 5
+ban: 2
+    
+# oracle protection
+auto-op: false
+auto-kick: false
+auto-add: false
+
+# messages and gags
+command-chars: 
+    - '?'
+    - '!'
+    - 'Oracle, '
+check-mail: true
+welcome-message: true
+join-message: true
+use-colours: true
+
+translate: false
+say-responses: true
+youtube-links: true
+
+rick-roll: false
+
+# developer
+mode: 'debug'
+sudo-char: '?^'
