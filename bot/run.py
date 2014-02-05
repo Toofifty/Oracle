@@ -1,18 +1,18 @@
-import oracle
-import connect
+import core.oracle
+import core.connect
 import traceback
 
 def run():
     try:
-        s, c = connect.start()
+        s, c = core.connect.start()
     except:
         sys.exit("There was an error connecting to the server.")
         
     while True:
         try:
-            rel = oracle.main(s, c)
+            rel = core.oracle.main(s, c)
             if rel:
-                reload(oracle) 
+                reload(core.oracle) 
                 print("!!! - Reload complete")
             else:
                 print("Process quit.")
