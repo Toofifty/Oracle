@@ -2,9 +2,9 @@
 
 import format as f
 import connect as c
+import varcontrols as v
 
 def get_response(nick, message):
-
 	if(message.lower() == "nope nope"):
 		c.say("nope.avi - http://www.youtube.com/watch?v=gvdf5n-zI14")
         
@@ -43,3 +43,46 @@ def get_response(nick, message):
         
 	elif(message.lower() == "oh sweet baby jesus"):
 		c.say("http://gfycat.com/ScientificUnawareAmericanwigeon")
+        
+        
+def rick_roll(nick, name):
+    if not v.getrank(nick) == 4:
+        name = nick
+        
+    c.whisper("Well done, " + nick + ".", nick)
+    
+    rickroll = ["We're no strangers to love",
+        "You know the rules, and so do I",
+        "A full commitment's what I'm thinking of",
+        "You wouldn't get this from any other guy",
+        "I just wanna tell you how I'm feeling",
+        "Gotta make you understand",
+        "Never gonna give you up",
+        "Never gonna let you down",
+        "Never gonna run around and desert you",
+        "Never gonna make you cry",
+        "Never gonna say goodbye",
+        "Never gonna tell a lie and hurt you",
+        "We've known each other for so long",
+        "Your heart's been aching, but",
+        "You're too shy to say it",
+        "Inside, we both know what's been going on",
+        "We know the game and we're gonna play it",
+        "And if you ask me how I'm feeling",
+        "Don't tell me you're too blind to see",
+        "Never gonna give you up",
+        "Never gonna let you down",
+        "Never gonna run around and desert you",
+        "Never gonna make you cry",
+        "Never gonna say goodbye",
+        "Never gonna tell a lie and hurt you"
+        ]
+        
+    for line in rickroll:
+        if nick == "Manyman":
+            c.whisper("< " + name + " > " + f.random() + line, nick)
+        else:
+            c.say("< " + name + " > " + f.random() + line)
+        time.sleep(2)
+        
+    c.say(f.PINK + "This Rick-Roll brought to you by " + f.CYAN + nick + f.PINK + ".")

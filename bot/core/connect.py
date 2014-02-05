@@ -20,19 +20,9 @@ class gamechat(object):
     def __init__(self):
         self.active = False
         
-    def __active(self):
-        self.active = True
-        
-    def __inactive(self):
-        self.active = False
-        
-    def __get(self):
-        return self.active
-        
 gc = gamechat()
 
 def getactive():
-    #return gc.__get()
     return gc.active
     
 def set_active(bot):
@@ -114,6 +104,7 @@ def raw(args):
 def start():
     global c
     c = loadconfig()
+    
     try:
         global s
         s = socket.socket()

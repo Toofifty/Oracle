@@ -180,7 +180,7 @@ def join(nick):
             c.mode(["+o", nick])
             c.whisper("You have been opped by Oracle", nick)
         else:
-            c.whisper("Oracle auto-op is disabled. Identify with NickServ to receive op.")
+            c.whisper("Oracle auto-op is disabled. Identify with NickServ to receive op.", nick)
             
     else:
         c.mode(["+v", nick])
@@ -191,10 +191,11 @@ def join(nick):
         else:
             c.whisper("You have mail! Use '?mail check' to see.", nick)
         
+    action_log = logging.getLogger('action')
     action_log.info(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))    
     
 """
-Processes commands that begin with a ?
+Processes commands
 """
 def processcmd(nick, msg):
     action_log = logging.getLogger('action')
@@ -244,47 +245,14 @@ def processcmd(nick, msg):
         elif cmd[0] == "pick":
             c.say(nick + ": " + misc.pick(cmd[1:]))
             
-        elif cmd[0] == "diamonds" and connect.loadconfig()['rick-roll']:
-            if rank == 4:
-                name = cmd[1]
+        elif cmd[0] == "diamonds":
+            if c.loadconfig()['rick-roll']:
+                gags.rick_roll(nick, cmd[1])
             else:
-                name = nick
-            c.whisper("Well done, " + nick + ".", nick)
-            rickroll = ["We're no strangers to love",
-                "You know the rules, and so do I",
-                "A full commitment's what I'm thinking of",
-                "You wouldn't get this from any other guy",
-                "I just wanna tell you how I'm feeling",
-                "Gotta make you understand",
-                "Never gonna give you up",
-                "Never gonna let you down",
-                "Never gonna run around and desert you",
-                "Never gonna make you cry",
-                "Never gonna say goodbye",
-                "Never gonna tell a lie and hurt you",
-                "We've known each other for so long",
-                "Your heart's been aching, but",
-                "You're too shy to say it",
-                "Inside, we both know what's been going on",
-                "We know the game and we're gonna play it",
-                "And if you ask me how I'm feeling",
-                "Don't tell me you're too blind to see",
-                "Never gonna give you up",
-                "Never gonna let you down",
-                "Never gonna run around and desert you",
-                "Never gonna make you cry",
-                "Never gonna say goodbye",
-                "Never gonna tell a lie and hurt you"
-                ]
-                
-            for line in rickroll:
-                if nick == "Manyman":
-                    c.whisper("< " + name + " > " + f.random() + line, nick)
-                else:
-                    c.say("< " + name + " > " + f.random() + line)
-                time.sleep(2)
-                
-            c.say("\x0313This Rick-Roll brought to you by \x0311" + nick + "\x0311")
+                c.whisper(f.WHITE + "64 diamonds have been credited to the Minecraft account " + f.RED + nick + f.WHITE + ".", nick)
+                time.sleep(5)
+                c.whisper("Just kidding.", nick)
+                c.whisper("This command has been disabled in the config.", nick)
         
         # moderator #
         elif cmd[0] == "say" and (rank >= 2):

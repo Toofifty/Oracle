@@ -5,7 +5,7 @@ nick: 'Oracle'
 ident: 'Oracle'
 pass: 'wombat1'
 realname: 'Toofifty'
-channel: '#rapidtest'
+channel: '#rapid'
 
 # admin
 # chat-log is buggy, best not to use
@@ -38,7 +38,6 @@ command-chars:
     - '!'
     - 'Oracle, '
 welcome-message: "&11Oracle bot has joined the session. Use &13?help &11for guidance."
-use-colours: true
 
 translate: false
 say-responses: true
