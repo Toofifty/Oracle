@@ -3,22 +3,29 @@ Oracle - Spam Handler
 ~ Toofifty 
 '''
 
-import json
+import yaml
 import sys
-import connect
 import threading
 import time
 import os
+import logging
 from colorama import init, Fore, Back
 init(autoreset=True)
 
-global flood
-flood={}
-global active
-active = False
-global last_msg
-last_msg = ''
+import format
+import connect
 
+global last_msg
+
+f = format.formats()
+flood = {}
+active = False
+last_msg = ''
+action_log = logging.getLogger('action')
+
+"""
+Creates a parallel time thread which resets the flood every [interval]
+"""
 class timeThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -27,56 +34,69 @@ class timeThread(threading.Thread):
         global active
         active = True
         while 1:
-            flood_('reset','null')
+            flood_('reset', 'null')
             time.sleep(c['interval'])
 
+"""
+Load config from config.yml as c
+"""
 def loadconfig():
-    with open('../bot/config/spam.json', 'r') as conf_file:
-        c = json.load(conf_file)   
+    with open('../bot/config/config.yml', 'r') as conf_file:
+        c = yaml.load(conf_file)
     return c
     
+"""
+Grab / change user 'flood' values
+"""
 def flood_(type, nick):
     global flood
     
-    if not 'flood' in globals():
-        flood = {}
-    elif type == 'add':
+    if type == 'add':
         flood[nick] += 1
         return flood[nick]
+        
     elif type == 'new':
         flood[nick] = 2
         return flood[nick]
+        
     elif type == 'check':
         if flood.has_key(nick):
             return True
         else:
             return False
+            
     else:
-        if not flood == {}:
-            pass
-            #print flood
         flood = {}
         return True
-    #print flood
+    print flood
     
-def handler(nick,msg):
+"""
+Handler determines what users will be added to flood, and kicks if over certain amounts
+"""    
+def handler(nick, msg):
     global last_msg
-    if(nick) and not 'esper.net' in nick:
-        if flood_('check',nick):
-            c = loadconfig()
+    c = loadconfig()
+    
+    if nick and not 'esper.net' in nick:
+        if flood_('check', nick):
             r = flood_('add',nick)
+            
             if (msg == last_msg):
-                r = flood_('add',nick)
-                print (Fore.RED + 'SPM' + Fore.RESET + ' - ' + nick + ' repeated a message.')
+                r = flood_('add', nick)
+                action_log.info(Fore.RED + 'SPM' + Fore.RESET + ' - ' + nick + ' repeated a message.')
+                
             if r > c['kick']:
-                connect.kick(nick)
-                connect.say('\x0308User \x0304' + nick + ' \x0308was kicked for spamming.')
-                print (Fore.RED + 'KCK' + Fore.RESET + ' - User: ' + nick + ' was kicked for spamming')
+                connect.kick(nick, "lol")
+                connect.say(f.YELLOW + 'User ' + f.RED + nick + f.YELLOW + ' was kicked for spamming.')
+                action_log.info(Fore.RED + 'KCK' + Fore.RESET + ' - User: ' + nick + ' was kicked for spamming')
+                
             elif r > c['warn']:
-                connect.whisper('\x0308Please slow down with your messages, or else you\'ll be kicked.\x0308',nick)
+                connect.whisper(f.YELLOW + 'Please slow down with your messages, or else you\'ll be kicked.',nick)
+                
         else:
-            global active
             if not active:
                 timeThread().start()
-            flood_('new',nick)
+            flood_('new', nick)
+            
     last_msg = msg
+    

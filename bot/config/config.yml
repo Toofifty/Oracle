@@ -8,6 +8,7 @@ realname: 'Toofifty'
 channel: '#rapidtest'
 
 # admin
+# chat-log is buggy, best not to use
 server-bots:
     - 'RapidCreative'
     - 'RapidSurvival'
@@ -18,30 +19,31 @@ send-format: '<< [%d/%m %H:%M:%S]'
 action-format: '!! [%d/%m %H:%M:%S]'
 
 # spam handler
-enabled: true
-interval: 3
-warn: 3
+spam-handler: true
+interval: 10
+warn: 2
 kick: 5
 ban: 2
     
-# oracle protection
+# on user join
 auto-op: false
 auto-kick: false
 auto-add: false
+join-message: true
+check-mail: true
 
 # messages and gags
 command-chars: 
     - '?'
     - '!'
     - 'Oracle, '
-check-mail: true
-welcome-message: true
-join-message: true
+welcome-message: "&11Oracle bot has joined the session. Use &13?help &11for guidance."
 use-colours: true
 
 translate: false
 say-responses: true
 youtube-links: true
+cleverbot: false
 
 rick-roll: false
 

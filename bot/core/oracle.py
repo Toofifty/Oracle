@@ -40,6 +40,8 @@ def rl(nick):
     modules = [m, e, v, n, youtube, cleverbot, spamhandler, format, misc, translate, gags]
     for mod in modules:
         reload(mod)
+    
+    action_log = logging.getLogger('action')
     action_log.info(Fore.RED + "RLD" + Fore.RESET + " Reload issued by " + nick)
         
     global do_reload
@@ -149,36 +151,47 @@ def helpc(nick, args):
 Asks cleverbot a question, and prints and says the response (broken)
 """
 def cb(ask, nick):
-    cbot = cleverbot.Session()
-    response = cbot.Ask(" ".join(ask))
-    action_log.info(Fore.CYAN + "CBT" + Fore.RESET + " " + response)
-    c.say(nick + ": " + response)
+    if c.loadconfig['cleverbot']:
+        cbot = cleverbot.Session()
+        response = cbot.Ask(" ".join(ask))
+        action_log.info(Fore.CYAN + "CBT" + Fore.RESET + " " + response)
+        c.say(nick + ": " + response)
+    else:
+        c.whisper("Cleverbot is currently disabled.", nick)
 
 """
 Actions to perform on user join
 """
 def join(nick):
-    # disable whitelist function by uncommenting
-    # if not v.listvar(nick):
-    #     v.makevarfile(nick)
     rank = v.getrank(nick)
-    c.say(f.LIGHTBLUE + "Welcome to the Rapid IRC, " + f.PURPLE + nick + f.LIGHTBLUE + ".")
-    action_log.info(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))
-    if rank == 0:
-        pass
-        #c.kick(nick, "You were kicked by Oracle, possibly because you were not whitelisted in the IRC? Please talk to an admin about this.")
+    config = c.loadconfig()
+    
+    if not v.listvar(nick) and config['auto-add']:
+        v.makevarfile(nick)
+    
+    if config['join-message']:
+        c.say(f.LIGHTBLUE + "Welcome to the Rapid IRC, " + f.PURPLE + nick + f.LIGHTBLUE + ".")
+    
+    if rank == 0 and config['auto-kick']:
+        c.kick(nick, "You were kicked by Oracle, possibly because you were not whitelisted in the IRC? Please talk to an admin about this.")
+        
     elif rank >= 3:
-    # enable/disable auto-op
-    #    c.mode(["+o", nick])
-    #    c.whisper("You have been opped by Oracle", nick)
-        c.whisper("Oracle auto-op is disabled. Identify with NickServ to receive op.")
+        if config['auto-op']:
+            c.mode(["+o", nick])
+            c.whisper("You have been opped by Oracle", nick)
+        else:
+            c.whisper("Oracle auto-op is disabled. Identify with NickServ to receive op.")
+            
     else:
         c.mode(["+v", nick])
-    if not m.check(nick):
-        c.whisper("You have no new mail.", nick)
-    else:
-        c.whisper("You have mail! Use '?mail check' to see.", nick)
-    
+       
+    if config['check-mail']:
+        if not m.check(nick):
+            c.whisper("You have no new mail.", nick)
+        else:
+            c.whisper("You have mail! Use '?mail check' to see.", nick)
+        
+    action_log.info(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))    
     
 """
 Processes commands that begin with a ?
@@ -231,7 +244,7 @@ def processcmd(nick, msg):
         elif cmd[0] == "pick":
             c.say(nick + ": " + misc.pick(cmd[1:]))
             
-        elif cmd[0] == "diamonds":
+        elif cmd[0] == "diamonds" and connect.loadconfig()['rick-roll']:
             if rank == 4:
                 name = cmd[1]
             else:
@@ -263,22 +276,27 @@ def processcmd(nick, msg):
                 "Never gonna say goodbye",
                 "Never gonna tell a lie and hurt you"
                 ]
+                
             for line in rickroll:
                 if nick == "Manyman":
                     c.whisper("< " + name + " > " + f.random() + line, nick)
                 else:
                     c.say("< " + name + " > " + f.random() + line)
                 time.sleep(2)
+                
             c.say("\x0313This Rick-Roll brought to you by \x0311" + nick + "\x0311")
         
         # moderator #
         elif cmd[0] == "say" and (rank >= 2):
             c.say(format.replace(" ".join(cmd[1:])))
             
-        elif cmd[0] == "attention" and (rank >= 2): c.getusers()
+        elif cmd[0] == "attention" and (rank >= 2):
+            c.getusers()
+            
         elif cmd[0] == "ban" and (rank >= 2):
             v.setvar(nick, cmd[1], "rank", 0)
             c.whisper("User: " + cmd[1] + " has been banned.", nick)
+            
         elif cmd[0] == "kick" and (rank >= 2):
             if len(cmd) < 3:
                 c.kick(cmd[1], "")
@@ -288,27 +306,37 @@ def processcmd(nick, msg):
                 c.whisper("User kicked for " + " ".join(cmd[2:]) + ".", nick)
         
         # admin #
-        elif cmd[0] == "close" and (rank >= 3): c.stop(nick)
-        elif cmd[0] == "restart" and (rank >= 3): c.restart(nick)
+        elif cmd[0] == "close" and (rank >= 3):
+            c.stop(nick)
+            
+        elif cmd[0] == "restart" and (rank >= 3):
+            c.restart(nick)
+            
         elif cmd[0] == "reload" and (rank >= 3):
             rl(nick)
             c.say(f.YELLOW + "Reload complete.")
+            
         elif cmd[0] == "sreload" and (rank >= 3):
             rl(nick)
             c.whisper(f.YELLOW + "Reload complete.", nick)
+            
         elif cmd[0] == "setrank" and (rank >= 3):
             v.setvar(cmd[1], "rank", int(cmd[2]))
             c.whisper(cmd[1] + "'s rank set to " + cmd[2] + ".", nick)
+            
         elif cmd[0] == "mode" and (rank >= 3):
             c.mode(cmd[1:])
+            
         elif cmd[0] == "alien" or cmd[0] == "?ayylmao":
             c.say("http://puu.sh/6wo5D.png")
+            
         elif cmd[0] == "getrank":
             c.whisper(cmd[1] + "'s rank is " + str(v.getvar(cmd[1], "rank")) + ".", nick)
             
         # server #
         elif cmd[0] == "events":
             results = e.get()
+            
             if results:
                 c.say("\x02Event\x02: " + results[0] + " || \x02Time\x02: " + results[1] + " UTC")
             else:
@@ -326,6 +354,7 @@ def processcmd(nick, msg):
         # dev #
         elif cmd[0] == "makevar" and (rank >= 4):
             target = cmd[1]
+            
             if(v.makevarfile(target)):
                 action_log.info(Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
                 c.whisper("VAR file successfully created for " + target, nick)
@@ -355,10 +384,12 @@ def processcmd(nick, msg):
             
         elif cmd[0] == "resetvar" and (rank >= 4):
             target = cmd[1]
+            
             if(v.deletevarfile(target)):
                 c.whisper("VAR file successfully deleted.", nick)
             else:
                 c.whisper("VAR file deletion failed.")
+                
             if(v.makevarfile(target)):
                 action_log.info(Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
                 c.whisper("VAR file successfully created for " + target, nick)
@@ -372,10 +403,17 @@ def processcmd(nick, msg):
         elif cmd[0] == "cls" and (rank >= 4):
             os.system("cls")
             
-        elif cmd[0] == "join" and (rank >= 4): join(nick)
-        elif cmd[0] == "joinn" and (rank >= 4): join(cmd[1])
-        elif cmd[0] == "raw" and (rank >= 4): c.raw(cmd[1:])
-        elif cmd[0] == "yaml" and (rank >= 4): testyaml()
+        elif cmd[0] == "join" and (rank >= 4):
+            join(nick)
+            
+        elif cmd[0] == "joinn" and (rank >= 4):
+            join(cmd[1])
+            
+        elif cmd[0] == "raw" and (rank >= 4):
+            c.raw(cmd[1:])
+            
+        elif cmd[0] == "yaml" and (rank >= 4):
+            testyaml()
       
         # personal #
         elif cmd[0] == "mail":
@@ -385,21 +423,26 @@ def processcmd(nick, msg):
                         c.whisper("You have no mail.", nick)
                     else:
                         c.whisper("Use ?mail read [mail]: "+ ", ".join(m.check(nick)), nick)
+                        
                 elif cmd[1].lower() == "send":
                     text = " ".join(cmd[4:])
                     if m.send(nick, cmd[2], cmd[3], text):
                         c.whisper("Message sent.", nick)
                     else:
                         c.whisper("Message failed to send.", nick)
+                        
                 elif cmd[1].lower() == "read":
                     c.whisper(m.read(nick, cmd[2]), nick)
+                    
                 elif cmd[1].lower() == "delete" or cmd[1].lower() == "del":
                     if m.delete(nick, cmd[2]):
                         c.whisper("Message deleted.", nick)
                     else:
                         c.whisper("Message not deleted.", nick)
+                        
                 else:
                     c.whisper("Usage: ?mail [check|send|read|delete]", nick)
+                    
             except:
                 traceback.print_exc()
                 c.whisper("Usage: ?mail [check|send|read|delete]", nick)
@@ -412,22 +455,29 @@ def processcmd(nick, msg):
                         c.whisper("Note successfully created.", nick)
                     else:
                         c.whisper("Note already exists with that file name", nick)
+                        
                 elif cmd[1].lower() == "delete":
                     if n.delete(cmd[2]):
                         c.whisper("Note successfully deleted.", nick)
                     else:
                         c.whisper("Deletion failed", nick)
+                        
                 elif cmd[1].lower() == "edit":
                     text = " ".join(cmd[3:])
                     n.edit(cmd[2], text[1])
+                    
                 elif cmd[1].lower() == "listall":
                     c.whisper(" ".join(n.list()), nick)
+                    
                 elif cmd[1].lower() == "search" or cmd[1].lower() == "list":
                     c.whisper(" ".join(n.find(cmd[2])), nick)
+                    
                 elif cmd[1].lower() == "get":
                     c.whisper(nick + ": " + n.get(cmd[2]), nick)
+                    
                 else:
                     c.whisper("Usage: ?notes [new|delete|edit|listall|search|get]", nick)
+                    
             except:
                 traceback.print_exc()
                 c.whisper("Usage: ?notes [new|delete|edit|listall|search|get]", nick)
@@ -444,18 +494,16 @@ Main loop, everything happens through this loop
 """       
 def mainloop(s, config):
 
-    logger.create_loggers(config)
-    
     send_log = logging.getLogger('send')
     receive_log = logging.getLogger('receive')
     action_log = logging.getLogger('action')
         
-    readbuffer = ""
-    last_nick = 0
+    readbuffer = last_nick = ""
     
     global do_reload
     global do_exit
     do_reload = do_exit = False
+    
     while True:
         try:
             readbuffer = readbuffer+s.recv(1024)
@@ -464,12 +512,13 @@ def mainloop(s, config):
             action_log.info(Fore.RED + "THR" + Fore.RESET + " Will try again in 20 seconds...")
             time.sleep(20)
             break
+            
         temp = string.split(readbuffer, "\n")
         readbuffer = temp.pop()
 
         for line in temp:
-            line = string.split(string.rstrip(line)) # line is an array of words
-            message = " ".join(line) # joins words into one string
+            line = string.split(string.rstrip(line))
+            message = " ".join(line)
                  
             if(line[0] == "PING"): 
                 c.ping(line[1])
@@ -484,8 +533,8 @@ def mainloop(s, config):
             elif(line[1] == "353"): 
                 c.say("".join(message.split(":")[2].replace("@","").replace("+","").replace("Oracle ","")))
                 
-            elif("JOIN" in line) and ("Oracle" in message): # welcome message
-                c.say(f.LIGHTBLUE + "Oracle bot has joined the session. Use " + f.PINK + "?help" + f.LIGHTBLUE + " for guidance.")
+            elif("JOIN" in line) and ("Oracle" in message):
+                c.say(format.replace(config['welcome-message']))
                 
             elif ("JOIN" in line or ":JOIN" in line) and not ("Oracle" in message):
                 join(line[0].split(":",1)[1].split("!",1)[0])
@@ -518,8 +567,9 @@ def mainloop(s, config):
                     nick, com = com.split("<",1)[1].split("> ",1)
                     c.set_active(bot)
 
-            if(nick == last_nick and not c.getactive()):
-                spamhandler.handler(nick, msg) 
+            if config['spam-handler']:
+                if not c.getactive():
+                    spamhandler.handler(nick, msg) 
 
             if com.startswith(config['sudo-char']) and v.getrank(nick) >= 4:
                 com = com.replace(config['sudo-char'],"")

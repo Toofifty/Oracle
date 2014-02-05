@@ -51,6 +51,5 @@ def replace(string):
         
     for format in array:
         string = string.replace(format[0], format[1])
-    
-    print string
+        
     return string

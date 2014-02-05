@@ -1,8 +1,12 @@
 import core.oracle
 import core.connect
+import core.logger
 import traceback
 
 def run():
+
+    core.logger.create_loggers()
+
     try:
         s, c = core.connect.start()
     except:
