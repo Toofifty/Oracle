@@ -49,7 +49,7 @@ def replace(string):
         ["&0", f.WHITE],
         ]
         
-    for format in array:
-        string = string.replace(format[0], format[1])
+    for f in array:
+        string = string.replace(f[0], f[1])
         
     return string

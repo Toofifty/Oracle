@@ -10,9 +10,6 @@ import os
 import spamhandler
 import yaml
 import logging
-from colorama import init, Fore, Back
-init(autoreset=True)
-
 send_log = logging.getLogger('send')
 action_log = logging.getLogger('action')
 
@@ -32,7 +29,7 @@ def set_inactive():
     gc.active = False
 
 def loadconfig():
-    with open('../bot/config/config.yml', 'r') as conf_file:
+    with open('../bot/config.yml', 'r') as conf_file:
         c = yaml.load(conf_file)
     action_log.debug("!!! - Config loaded")
     return c
@@ -84,9 +81,9 @@ def identify():
     s.send("nickserv IDENTIFY Oracle %s\r\n" % c['pass'])
     send_log.debug("nickserv IDENTIFY Oracle %s" % c['pass'])
 
-def ping(id):
-    s.send("PONG %s\r\n" % id)
-    send_log.debug("PONG %s\r\n" % id)
+def ping(i):
+    s.send("PONG %s\r\n" % i)
+    send_log.debug("PONG %s\r\n" % i)
     
 def join():
     s.send("JOIN %s\r\n" % c['channel'])

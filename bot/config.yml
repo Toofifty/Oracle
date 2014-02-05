@@ -5,7 +5,7 @@ nick: 'Oracle'
 ident: 'Oracle'
 pass: 'wombat1'
 realname: 'Toofifty'
-channel: '#rapid'
+channel: '#rapidd'
 
 # admin
 # chat-log is buggy, best not to use
@@ -26,6 +26,7 @@ kick: 5
 ban: 2
     
 # on user join
+# configurable join message coming soon
 auto-op: false
 auto-kick: false
 auto-add: false
@@ -39,8 +40,10 @@ command-chars:
     - 'Oracle, '
 welcome-message: "&11Oracle bot has joined the session. Use &13?help &11for guidance."
 
+# translate somehow seems to always piss people
+# off, though I'm not sure as to why
 translate: false
-say-responses: true
+say-responses: false
 youtube-links: true
 cleverbot: false
 

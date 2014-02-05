@@ -7,10 +7,10 @@ import os
 
 def check(nick):
     letters = []
-    for file in os.listdir('../bot/mail/'):
-        text = file.split(" ")
+    for f in os.listdir('../bot/mail/'):
+        text = f.split(" ")
         if nick in text:
-            mail = file.split(nick + " - ")[1].split(".txt")[0]
+            mail = f.split(nick + " - ")[1].split(".txt")[0]
             letters.append(mail)
     return letters
             

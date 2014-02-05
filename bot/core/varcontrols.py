@@ -32,7 +32,7 @@ def setvar(target, var, val): #set specific values for users
 def getvar(target, var):
     try:
         if not(os.path.exists('../bot/users/' + target + '.json')):
-            makevarfile(nick, target)
+            makevarfile(target)
             getvar(target, var)
         else:
             with open('../bot/users/' + target + '.json') as data_file:    
@@ -44,8 +44,8 @@ def getvar(target, var):
 def listvar(target):
     try:
         if not(os.path.exists('../bot/users/' + target + '.json')):
-            makevarfile(nick, target)
-            getvar(target, var)
+            makevarfile(target)
+            listvar(target)
         else:
             with open('../bot/users/' + target + '.json') as data_file:    
                 data = json.load(data_file)

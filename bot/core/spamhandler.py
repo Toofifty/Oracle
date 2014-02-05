@@ -41,7 +41,7 @@ class timeThread(threading.Thread):
 Load config from config.yml as c
 """
 def loadconfig():
-    with open('../bot/config/config.yml', 'r') as conf_file:
+    with open('../bot/config.yml', 'r') as conf_file:
         c = yaml.load(conf_file)
     return c
     

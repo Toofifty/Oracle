@@ -1,6 +1,6 @@
 import logging
 import connect
-from colorama import init, Fore, Back, Style
+from colorama import init, Back
 init(autoreset=True)
         
 def create_loggers():

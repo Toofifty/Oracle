@@ -13,7 +13,7 @@ def new(filename, text):
         f.close()
         return True
 
-def list():
+def listall():
     return os.listdir('../bot/notes/')
 
 def find(term):
