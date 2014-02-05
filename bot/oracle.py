@@ -17,7 +17,7 @@ import time
 import calendar
 import os
 import logging
-from colorama import init, Fore, Back
+from colorama import init, Fore, Back, Style
 init(autoreset=True)
 
 import connect as c
@@ -32,17 +32,15 @@ import format
 import misc
 import translate
 import gags
+import logger
     
 f = format.formats()
-
-def log(msg):
-    print("[" + time.ctime() + "] " + msg)
 
 def rl(nick):
     modules = [m, e, v, n, youtube, cleverbot, spamhandler, format, misc, translate, gags]
     for mod in modules:
         reload(mod)
-    log(Fore.RED + "RLD" + Fore.RESET + " Reload issued by " + nick)
+    action_log.info(Fore.RED + "RLD" + Fore.RESET + " Reload issued by " + nick)
         
     global do_reload
     do_reload = True
@@ -153,7 +151,7 @@ Asks cleverbot a question, and prints and says the response (broken)
 def cb(ask, nick):
     cbot = cleverbot.Session()
     response = cbot.Ask(" ".join(ask))
-    log(Fore.CYAN + "CBT" + Fore.RESET + " " + response)
+    action_log.info(Fore.CYAN + "CBT" + Fore.RESET + " " + response)
     c.say(nick + ": " + response)
 
 """
@@ -165,7 +163,7 @@ def join(nick):
     #     v.makevarfile(nick)
     rank = v.getrank(nick)
     c.say(f.LIGHTBLUE + "Welcome to the Rapid IRC, " + f.PURPLE + nick + f.LIGHTBLUE + ".")
-    log(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))
+    action_log.info(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))
     if rank == 0:
         pass
         #c.kick(nick, "You were kicked by Oracle, possibly because you were not whitelisted in the IRC? Please talk to an admin about this.")
@@ -186,10 +184,12 @@ def join(nick):
 Processes commands that begin with a ?
 """
 def processcmd(nick, msg):
+    action_log = logging.getLogger('action')
+    
     cmd = msg.split(" ")
     args = cmd[1:]
     rank = v.getrank(nick)
-    log(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | nick: " + nick)
+    action_log.info(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | nick: " + nick)
     
     try:
         # emotes #
@@ -327,10 +327,10 @@ def processcmd(nick, msg):
         elif cmd[0] == "makevar" and (rank >= 4):
             target = cmd[1]
             if(v.makevarfile(target)):
-                log(Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
+                action_log.info(Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
                 c.whisper("VAR file successfully created for " + target, nick)
             else:
-                log(Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
+                action_log.info(Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
                 c.whisper("VAR file failed to create for " + target, nick)
                 
         elif cmd[0] == "getvar" and (rank >= 4):
@@ -360,10 +360,10 @@ def processcmd(nick, msg):
             else:
                 c.whisper("VAR file deletion failed.")
             if(v.makevarfile(target)):
-                log(Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
+                action_log.info(Fore.RED + "!!!" + Fore.RESET + " - New var file created for " + target + " by " + nick)
                 c.whisper("VAR file successfully created for " + target, nick)
             else:
-                log(Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
+                action_log.info(Fore.RED + "!!!" + Fore.RESET + " - Var file creation failed - " + nick)
                 c.whisper("VAR file failed to create for " + target, nick)
                 
         elif cmd[0] == "formats" and (rank >= 4):
@@ -443,6 +443,13 @@ def processcmd(nick, msg):
 Main loop, everything happens through this loop
 """       
 def mainloop(s, config):
+
+    logger.create_loggers(config)
+    
+    send_log = logging.getLogger('send')
+    receive_log = logging.getLogger('receive')
+    action_log = logging.getLogger('action')
+        
     readbuffer = ""
     last_nick = 0
     
@@ -453,7 +460,9 @@ def mainloop(s, config):
         try:
             readbuffer = readbuffer+s.recv(1024)
         except:
-            #log(Fore.RED + "THR" + Fore.RESET + " Cannot connect, throttled by server")
+            action_log.info(Fore.RED + "THR" + Fore.RESET + " Cannot connect, throttled by server.")
+            action_log.info(Fore.RED + "THR" + Fore.RESET + " Will try again in 20 seconds...")
+            time.sleep(20)
             break
         temp = string.split(readbuffer, "\n")
         readbuffer = temp.pop()
@@ -470,7 +479,7 @@ def mainloop(s, config):
                 
             elif("NickServ!" in line[0] and line[4] == "nickname"):
                 c.identify()
-                log(Fore.GREEN + "!!! " + Fore.WHITE + "Identified")
+                action_log.info(Fore.GREEN + "!!! " + Fore.WHITE + "Identified")
                 
             elif(line[1] == "353"): 
                 c.say("".join(message.split(":")[2].replace("@","").replace("+","").replace("Oracle ","")))
@@ -498,7 +507,7 @@ def mainloop(s, config):
                     break
                     
                 com = msg # bad
-                log(Fore.CYAN + "MSG" + Fore.RESET + " <" + nick + "> " + com)
+                receive_log.info(Fore.CYAN + "MSG" + Fore.RESET + " <" + nick + "> " + com)
             else:
                 break
                 
@@ -507,7 +516,6 @@ def mainloop(s, config):
             for bot in config['server-bots']:
                 if nick == bot and com.startswith("<"):
                     nick, com = com.split("<",1)[1].split("> ",1)
-                    #log("In-game command - " + nick + ", com - " + com)
                     c.set_active(bot)
 
             if(nick == last_nick and not c.getactive()):
@@ -524,7 +532,7 @@ def mainloop(s, config):
 
             if config['translate']:
                 if translate.requires_translate(com):
-                    log("TRN Translating...")
+                    action_log.info("TRN Translating...")
                     c.say("I think you mean: " + translate.translate_result(com))
 
             if config['say-responses']:

@@ -9,8 +9,12 @@ import json
 import os
 import spamhandler
 import yaml
+import logging
 from colorama import init, Fore, Back
 init(autoreset=True)
+
+send_log = logging.getLogger('send')
+action_log = logging.getLogger('action')
 
 class gamechat(object):
     def __init__(self):
@@ -40,39 +44,45 @@ def set_inactive():
 def loadconfig():
     with open('../bot/config/config.yml', 'r') as conf_file:
         c = yaml.load(conf_file)
-    #with open('../bot/config/config.json', 'r') as conf_file:
-    #    c = json.load(conf_file)   
+    action_log.debug("!!! - Config loaded")
     return c
 
 def getusers():
     c = loadconfig()
-    #s.send("NAMES " + c['channel'] + "\r\n")
+    s.send("NAMES " + c['channel'] + "\r\n")
+    send_log.debug("NAMES " + c['channel'] + "\r\n")
     
 def say(msg):
     s.send("PRIVMSG " + str(c['channel']) + " :" + str(msg) + "\r\n")
-    print("<< PRIVMSG " + str(c['channel']) + " :" + str(msg))
+    send_log.debug("PRIVMSG " + str(c['channel']) + " :" + str(msg))
     
     
 def whisper(msg, nick):
     if not (gc.active):
         s.send("NOTICE " + nick + " :" + str(msg) + "\r\n")
+        send_log.debug("NOTICE " + nick + " :" + str(msg))
     else:
         s.send("PRIVMSG " + gc.active + " :" + nick + " " + str(msg) + "\r\n")
+        send_log.debug("PRIVMSG " + gc.active + " :" + nick + " " + str(msg))
     
 def kick(nick, reason):
     c= loadconfig()
     s.send("KICK %s %s %s\r\n" % (c['channel'],nick, reason))
+    send_log.debug("KICK %s %s %s\r\n" % (c['channel'],nick, reason))
 
 def stop(nick):
-    print "!!! - Stop command issued! Closing."
+    action_log.info("!!! - Stop command issued! Closing.")
     say("\00307\x02Goodbye!\00307\x02")
     s.send("QUIT\r\n")
-    sys.exit("!!! - " + nick +" terminated session.")
+    send_log.debug("QUIT\r\n")
+    action_log.info("!!! - " + nick +" terminated session.")
+    sys.exit()
 
 def restart(nick):
-    print ("!!! - Restart command issued by " + nick)
+    action_log.info("!!! - Restart command issued by " + nick)
     say("\00307\x02Restarting!\00307\x02")
     s.send("QUIT\r\n")
+    send_log.debug("QUIT\r\n")
 
     args = sys.argv[:]
     args.insert(0, sys.executable)
@@ -82,20 +92,24 @@ def restart(nick):
 
 def identify():
     s.send("nickserv IDENTIFY Oracle %s\r\n" % c['pass'])
-    return True
+    send_log.debug("nickserv IDENTIFY Oracle %s" % c['pass'])
 
 def ping(id):
     s.send("PONG %s\r\n" % id)
+    send_log.debug("PONG %s\r\n" % id)
     
 def join():
     s.send("JOIN %s\r\n" % c['channel'])
+    send_log.debug("JOIN %s" % c['channel'])
     
 def mode(args):
     c= loadconfig()
     s.send("MODE " + c['channel'] + " " + " ".join(args) + "\r\n")
+    send_log.debug("MODE " + c['channel'] + " " + " ".join(args))
     
 def raw(args):
     s.send(" ".join(args) + "\r\n")
+    send_log.debug(" ".join(args))
     
 def start():
     global c
@@ -108,7 +122,7 @@ def start():
         s.send('USER '+c['ident']+' '+c['host']+' bla :'+c['realname']+'\r\n')
         return s, c
     except:
-        print ("!!! - Error! Failed to connect to " + c['channel'] + " on " + c['host'])
+        action_log.warning("!!! - Error! Failed to connect to " + c['channel'] + " on " + c['host'])
         return False
         
 start()

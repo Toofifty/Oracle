@@ -5,12 +5,17 @@ nick: 'Oracle'
 ident: 'Oracle'
 pass: 'wombat1'
 realname: 'Toofifty'
-channel: '#rapid'
+channel: '#rapidtest'
 
 # admin
 server-bots:
     - 'RapidCreative'
     - 'RapidSurvival'
+chat-log: false 
+console-format: '%(asctime)s %(message)s'
+receive-format: '>> [%d/%m %H:%M:%S]'
+send-format: '<< [%d/%m %H:%M:%S]'
+action-format: '!! [%d/%m %H:%M:%S]'
 
 # spam handler
 enabled: true
@@ -41,5 +46,5 @@ youtube-links: true
 rick-roll: false
 
 # developer
-mode: 'debug'
+mode: 'not debug'
 sudo-char: '?^'

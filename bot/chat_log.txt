@@ -1,0 +1,103 @@
+INFO:receive:[36mMSG[39m <availo.esper.net> *** Looking up your hostname...
+INFO:receive:[36mMSG[39m <availo.esper.net> *** Checking Ident
+INFO:receive:[36mMSG[39m <availo.esper.net> *** Found your hostname
+INFO:receive:[36mMSG[39m <availo.esper.net> *** No Ident response
+INFO:receive:[36mMSG[39m <availo.esper.net> Welcome to the EsperNet Internet Relay Chat Network Oracle
+INFO:receive:[36mMSG[39m <availo.esper.net> Your host is availo.esper.net[80.65.51.138/6667], running version charybdis-3.3.0
+INFO:receive:[36mMSG[39m <availo.esper.net> This server was created Sun Feb 5 2012 at 23:12:30 CET
+INFO:receive:[36mMSG[39m <availo.esper.net> availo.esper.net charybdis-3.3.0 DQRSZagiloswz CFILPQbcefgijklmnopqrstvz bkloveqjfI
+INFO:receive:[36mMSG[39m <availo.esper.net> CHANTYPES=# EXCEPTS INVEX CHANMODES=eIbq,k,flj,CFPcgimnpstz CHANLIMIT=#50 PREFIX=(ov)@+ MAXLIST=bqeI:100 MODES=4 NETWORK=EsperNet KNOCK STATUSMSG=@+ CALLERID=g :are supported by this server
+INFO:receive:[36mMSG[39m <availo.esper.net> CASEMAPPING=rfc1459 CHARSET=ascii NICKLEN=30 CHANNELLEN=50 TOPICLEN=390 ETRACE CPRIVMSG CNOTICE DEAF=D MONITOR=100 FNC TARGMAX=NAMES1,LIST:1,KICK:1,WHOIS:1,PRIVMSG:4,NOTICE:4,ACCEPT:,MONITOR: :are supported by this server
+INFO:receive:[36mMSG[39m <availo.esper.net> EXTBAN=$,acjorsxz WHOX CLIENTVER=3.0 SAFELIST ELIST=CTU are supported by this server
+INFO:receive:[36mMSG[39m <availo.esper.net> There are 17 users and 7380 invisible on 11 servers
+INFO:receive:[36mMSG[39m <availo.esper.net> 37 IRC Operators online
+INFO:receive:[36mMSG[39m <availo.esper.net> 5122 channels formed
+INFO:receive:[36mMSG[39m <availo.esper.net> I have 1989 clients and 1 servers
+INFO:receive:[36mMSG[39m <availo.esper.net> 1989 5215 Current local users 1989, max 5215
+INFO:receive:[36mMSG[39m <availo.esper.net> 7397 9054 Current global users 7397, max 9054
+INFO:receive:[36mMSG[39m <availo.esper.net> Highest connection count: 5216 (5215 clients) (2336126 connections received)
+INFO:receive:[36mMSG[39m <availo.esper.net> - availo.esper.net Message of the Day -
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - ;. cd: dd. o .dl dd .oOXX0x;
+INFO:receive:[36mMSG[39m <availo.esper.net> - .NX. 'WM, kM0 oMo cMX .MM. .oXMKkddxONWk,
+INFO:receive:[36mMSG[39m <availo.esper.net> - .WNWX. ,MW. oMK dMNMo cMX .MM. lMWc '0MO
+INFO:receive:[36mMSG[39m <availo.esper.net> - .WN.'WN. ;MN. cMX xMk kMd cMX .MM. :MW. 0MO
+INFO:receive:[36mMSG[39m <availo.esper.net> - 'WN. 'WN. :MX ,MN. xMk kMx cMX .MM. xMK cMM
+INFO:receive:[36mMSG[39m <availo.esper.net> - ,WN. 'WN. cMK'WW. kMx kMk cMX .MM. ,MM' 0Mk
+INFO:receive:[36mMSG[39m <availo.esper.net> - ,WW. ,WW. oMMW. kMk kMO cMX .MM. :WWo. ;KMk
+INFO:receive:[36mMSG[39m <availo.esper.net> - ;MW. ,MW' dM, OMO kMO cMX .MMK0000. c0WN0kkOXMXd.
+INFO:receive:[36mMSG[39m <availo.esper.net> - ,,. .,' c .,, ,,. .,' ,,,,,,, ,oxkd:.
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - availo.esper.net
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - chief donkey: brynjar
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - helper donkeys
+INFO:receive:[36mMSG[39m <availo.esper.net> - #1: DeeWoo
+INFO:receive:[36mMSG[39m <availo.esper.net> - #2: NewtypeDan
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - This server is listening on ports 5555, 6667-9 and 7000
+INFO:receive:[36mMSG[39m <availo.esper.net> - SSL-connections are recommended, and welcome on port 6697
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - * TERMS OF SERVICE *
+INFO:receive:[36mMSG[39m <availo.esper.net> - Your use of this network constitutes an agreement to abide by the
+INFO:receive:[36mMSG[39m <availo.esper.net> - rules presented in the EsperNet AUP - http://esper.net/charter.php
+INFO:receive:[36mMSG[39m <availo.esper.net> - as well as any applicable Norwegian and International laws.
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - Further, your use of this network implies consent to a port scan
+INFO:receive:[36mMSG[39m <availo.esper.net> - to detect open proxies and otherwise compromised systems.
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - Properly configured bots are permitted, but are required to follow
+INFO:receive:[36mMSG[39m <availo.esper.net> - the same rules as users. Please refer to http://esper.net/bots.php
+INFO:receive:[36mMSG[39m <availo.esper.net> - for more information about configuration requirements and suggestions.
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - * USEFUL CHANNELS *
+INFO:receive:[36mMSG[39m <availo.esper.net> - #dragonweyr - Network staff assistance
+INFO:receive:[36mMSG[39m <availo.esper.net> - #coders - Help with programming|tr gm cs|sed 's/s\(in\)c/t\1ation/'
+INFO:receive:[36mMSG[39m <availo.esper.net> - #lobby - Chat
+INFO:receive:[36mMSG[39m <availo.esper.net> - #help - General IRC help
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - * SPONSORING COMPANY *
+INFO:receive:[36mMSG[39m <availo.esper.net> - This server is sponsored by Availo:
+INFO:receive:[36mMSG[39m <availo.esper.net> - http://www.availo.no/
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - * MOST GLORIOUS, CELEBRATED AND HIGHLY VALUED USERS OF THIS WEEK *
+INFO:receive:[36mMSG[39m <availo.esper.net> - - Mozoa
+INFO:receive:[36mMSG[39m <availo.esper.net> - - Jake0720
+INFO:receive:[36mMSG[39m <availo.esper.net> - - señor Flea
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - * CURRENT THEME SONG *
+INFO:receive:[36mMSG[39m <availo.esper.net> - Please help yourself to the current official theme song of
+INFO:receive:[36mMSG[39m <availo.esper.net> - availo.esper.net: http://kaffekoker.net/mp3/availo_02.mp3
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - Our previous theme song: http://kaffekoker.net/mp3/availo_01.mp3
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> - Feel free to poke 'brynjar' if you are awesome and would like to
+INFO:receive:[36mMSG[39m <availo.esper.net> - donate a chiptune you have composed. EsperNet will love you for it!
+INFO:receive:[36mMSG[39m <availo.esper.net> -
+INFO:receive:[36mMSG[39m <availo.esper.net> End of /MOTD command.
+INFO:receive:[36mMSG[39m <Oracle> +i
+INFO:action:[32m!!! [37mIdentified
+INFO:receive:[36mMSG[39m <NickServ> This nickname is registered. Please choose a different nickname, or identify via /msg NickServ identify <password>.
+INFO:receive:[36mMSG[39m <Oracle> 
+INFO:receive:[36mMSG[39m <availo.esper.net> = #rapidtest Oracle @Toofifty
+INFO:receive:[36mMSG[39m <availo.esper.net> #rapidtest End of /NAMES list.
+INFO:receive:[36mMSG[39m <NickServ> You are now identified for Oracle.
+INFO:receive:[36mMSG[39m <Toofifty> Swagger
+INFO:receive:[36mMSG[39m <Toofifty> ?help
+INFO:action:[35mCMD[39m help | nick: Toofifty
+INFO:receive:[36mMSG[39m <Toofifty> sadg
+INFO:receive:[36mMSG[39m <Toofifty> dsfh
+INFO:receive:[36mMSG[39m <Toofifty> dsfh
+INFO:receive:[36mMSG[39m <Toofifty> dsf
+INFO:receive:[36mMSG[39m <Toofifty> hdsf
+INFO:receive:[36mMSG[39m <Toofifty> h
+INFO:receive:[36mMSG[39m <Toofifty> dsf
+INFO:receive:[36mMSG[39m <Toofifty> h
+INFO:receive:[36mMSG[39m <Toofifty> dsf
