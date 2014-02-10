@@ -5,7 +5,7 @@ nick: 'Oracle'
 ident: 'Oracle'
 pass: 'wombat1'
 realname: 'Toofifty'
-channel: '#rapidd'
+channel: '#rapid'
 
 # admin
 # chat-log is buggy, best not to use
@@ -43,12 +43,12 @@ welcome-message: "&11Oracle bot has joined the session. Use &13?help &11for guid
 # translate somehow seems to always piss people
 # off, though I'm not sure as to why
 translate: false
-say-responses: false
+say-responses: true
 youtube-links: true
 cleverbot: false
 
 rick-roll: false
 
 # developer
-mode: 'not debug'
+mode: 'debug'
 sudo-char: '?^'

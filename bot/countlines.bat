@@ -1,0 +1,3 @@
+
+python count.py
+pause
