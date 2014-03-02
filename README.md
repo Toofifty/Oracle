@@ -21,7 +21,7 @@ Commands
     Server:
   
     events 			nether			poll
-    uhc				overworld
+    uhc				overworld		vote
   
     Personal:
   
@@ -31,74 +31,82 @@ Commands
     Other/fun:
   
     help			diamonds (rick-roll)
-    cb
-	pick
+    cb				rps				score
+	pick			a
   
     Admin:
   
-    close			say				ban
-	reload			attention		kick
-	restart			setrank
+    close			say				ban				sreload			flood			score
+	reload			attention		kick			ignore			pardon
+	restart			setrank			trivia			ban				getrank
 	
 	Developer:
 	
 	makevar			deletevar		cls				raw
-	getvar			resetvar		sayr
+	getvar			resetvar		sayr			config
 	setvar			formats			join
 
 Functionalities
 ---------------
 
-	Integration with the plugin 'RapidIRC'
+* Integration with the plugin [RapidIRC](https://github.com/Toofifty/RapidIRC)
 
-    Grab Youtube video meta-data after posting a link (when enabled)
+* Grab Youtube video meta-data after posting a link (when enabled)
     
-    Respond to common phrases (when enabled)
+* Respond to common phrases (when enabled)
     
-    Correct some common typos/abbreviations (when enabled)
+* Correct some common typos/abbreviations (when enabled)
   
-    Sudo commands ( ?^[user] [command] ) ('?^' is configurable)
+* Sudo commands ( ?^[user] [command] ) ('?^' is configurable)
     
-    Configurable command prefix (default: '?', '!', 'Oracle, ')
+* Configurable command prefix (default: '?', '!', 'Oracle, ')
   
-    Configurable spam handler
+* Configurable spam handler
 	
-	Mail system + check on join (when enabled)
+* Mail system + check on join (when enabled)
 	
-	Notes system
+* Notes system
 	
-	Configurable IRC options
+* Configurable IRC options
 
-	Configurable functionalities
+* Configurable functionalities
 	
-	Configurable log-to-file
+* Configurable log-to-file
 	
-	Per-user variables (rank, etc)
+* Per-user variables (rank, etc)
 	
-	Clean cmd output (configurable)
+* Clean cmd output (configurable)
 	
-	Reload without leaving IRC session
+* Reload without leaving IRC session
 	
-	Auto-kicking of banned (rank: 0) users (when enabled)
+* Auto-kicking of banned (rank: 0) users (when enabled)
 	
-	Auto-opping of admin+ (rank: 3) users (when enabled)
+* Auto-opping of admin+ (rank: 3) users (when enabled)
 	
-	Auto-creation of var files (when enabled)
+* Auto-creation of var files (when enabled)
 	
-	Cleverbot integration (broken)
+* [Cleverbot](http://www.cleverbot.com/) integration (broken)
 	
-	Easy in-code formatting
+* Easy in-code formatting
 	
-	Configurable welcome and join messages
+* Configurable welcome and join messages
+
+* Play Rock Paper Scissors
+
+* Trivia
+
+* Input commands in the terminal
+
+* Reload/set/get config on the fly
 	
-	Only crashes sometimes
+* Only crashes sometimes
 
 Planned features/TO DO
 ======================
   
-    IRC games
+* More IRC games
   
-    Leave a message/announcement
+* Leave a message/announcement
 
 License
 =======
