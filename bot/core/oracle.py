@@ -81,7 +81,7 @@ Prints the commands and help list to the user
 def helpc(nick, args):
     rank = v.getrank(nick)
     
-    with open('../bot/help.yml', 'r') as help_file:
+    with open('help.yml', 'r') as help_file:
         help = yaml.load(help_file)
         
     ranks = {'dev': 4, 
@@ -123,9 +123,10 @@ def helpc(nick, args):
                             done = True
             if not done:
                 raise Warning
-        else:
-            raise Warning
+        # else:
+            # raise Warning
     except:
+        traceback.print_exc()
         for line in help['default']:
             c.whisper(format.replace(line), nick)
         c.whisper(format.replace(help['categories'][int(rank)]), nick)
@@ -212,7 +213,10 @@ not much of a problem.
 def processcmd(nick, msg):    
     cmd = msg.split(" ")
     rank = v.getrank(nick)
-    action_log.info(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | nick: " + nick)
+    if len(cmd) == 1:
+        action_log.info(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | nick: " + nick)
+    else:
+        action_log.info(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | args: " + " ".join(cmd[1:]) + " | nick: " + nick)
     
     try:
         # regular user
@@ -718,6 +722,8 @@ def mainloop(s, config):
                 for bot in config.get('server-bots'):
                     if nick == bot:
                         sh = False
+                if nick == config.get('nick'):
+                    sh = False
                 if sh:
                     spam.increment(nick, msg) 
                 
