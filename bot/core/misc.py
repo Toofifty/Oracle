@@ -11,3 +11,6 @@ def pick(args):
     choice = random.randint(1, len(args)) - 1
     return args[choice]
     
+class poll:
+    def __init__(self, time, *options):
+        pass

@@ -18,15 +18,22 @@ receive-format: '>> [%d/%m %H:%M:%S]'
 send-format: '<< [%d/%m %H:%M:%S]'
 action-format: '!! [%d/%m %H:%M:%S]'
 
+# auto actions
+reload-interval: 7200
+restart-interval: 86400
+
 # spam handler
 spam-handler: true
 interval: 10
-warn: 2
+warn: 3
 kick: 5
+# unused
 ban: 2
     
 # on user join
-# configurable join message coming soon
+# configurable (user) join message coming soon
+use-json-whitelist: true
+whitelist-location: 'http://h.jakelane.me:9001/api/v1/ircwhitelist'
 auto-op: false
 auto-kick: false
 auto-add: false
@@ -41,7 +48,7 @@ command-chars:
 welcome-message: "&11Oracle bot has joined the session. Use &13?help &11for guidance."
 
 # translate somehow seems to always piss people
-# off, though I'm not sure as to why
+# off, though I'm not sure as to why :)
 translate: false
 say-responses: true
 youtube-links: true
@@ -49,6 +56,19 @@ cleverbot: false
 
 rick-roll: false
 
+# games
+trivia: true
+trivia-interval: 1200
+trivia-points: 100
+
+rps-points: 50
+
+# or set to false
+random-points: false
+random-min-interval: 600
+random-max-interval: 3600
+
 # developer
-mode: 'debug'
+mode: 'not debug'
 sudo-char: '?^'
+command-line: true

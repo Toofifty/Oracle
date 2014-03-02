@@ -2,6 +2,8 @@ import logging
 import connect
 from colorama import init, Back
 init(autoreset=True)
+
+from base import *
         
 def create_loggers():
     loggers = [
@@ -10,10 +12,8 @@ def create_loggers():
         'action'
         ]
         
-    c = connect.loadconfig()
-        
     for l in loggers:
-        if c['chat-log']:
+        if config.get('chat-log'):
             logging.basicConfig(filename='chat_log.txt')
 
         # create logger
@@ -24,13 +24,13 @@ def create_loggers():
         console = logging.StreamHandler()
         console.setLevel(logging.DEBUG)
         
-        if c['mode'].lower() == 'debug':
+        if config.get('mode').lower() == 'debug':
             logger.setLevel(logging.DEBUG)
         else:
             logger.setLevel(logging.INFO)
         
         # create formatter
-        formatter = logging.Formatter(fmt=c['console-format'],datefmt=Back.BLUE + c[l + '-format'] + Back.RESET)
+        formatter = logging.Formatter(fmt=config.get('console-format'),datefmt=Back.BLUE + config.get(l + '-format') + Back.RESET)
         
         # add formatter to console
         console.setFormatter(formatter)

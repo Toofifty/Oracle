@@ -1,0 +1,50 @@
+action-format: '!! [%d/%m %H:%M:%S]'
+auto-add: false
+auto-kick: false
+auto-op: false
+ban: 2
+channel: '#rapid'
+chat-log: false
+check-mail: true
+cleverbot: false
+command-chars:
+- '?'
+- '!'
+- 'Oracle, '
+command-line: true
+console-format: '%(asctime)s %(message)s'
+host: irc.esper.net
+ident: Oracle
+interval: 10
+join-message: true
+kick: 5
+mode:
+- '''dgsag'''
+nick: Oracle
+pass: wombat1
+port: 6667
+random-max-interval: 3600
+random-min-interval: 600
+random-points: false
+realname: Toofifty
+receive-format: '>> [%d/%m %H:%M:%S]'
+reload-interval: 7200
+restart-interval: 86400
+rick-roll: false
+rps-points: 50
+say-responses: true
+send-format: << [%d/%m %H:%M:%S]
+server-bots:
+- RapidCreative
+- RapidSurvival
+spam-handler: true
+sudo-char: ?^
+translate: false
+trivia: true
+trivia-interval: 1200
+trivia-points: 100
+use-json-whitelist: true
+warn: 3
+welcome-message: '&11Oracle bot has joined the session. Use &13?help &11for guidance.'
+whitelist-location: http://h.jakelane.me:9001/api/v1/ircwhitelist
+youtube-links: true

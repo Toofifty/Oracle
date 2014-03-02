@@ -101,3 +101,141 @@ INFO:receive:[36mMSG[39m <Toofifty> h
 INFO:receive:[36mMSG[39m <Toofifty> dsf
 INFO:receive:[36mMSG[39m <Toofifty> h
 INFO:receive:[36mMSG[39m <Toofifty> dsf
+DEBUG:receive:receive logger initiated.
+DEBUG:send:send logger initiated.
+DEBUG:action:action logger initiated.
+DEBUG:action:!!! - Config loaded
+DEBUG:action:!!! - Config loaded
+INFO:action:Command line initialized
+INFO:receive:[36mMSG[39m <aperture.esper.net> *** Looking up your hostname...
+INFO:receive:[36mMSG[39m <aperture.esper.net> *** Checking Ident
+INFO:receive:[36mMSG[39m <aperture.esper.net> *** Found your hostname
+INFO:receive:[36mMSG[39m <aperture.esper.net> *** No Ident response
+DEBUG:send:PONG :F87936E8
+
+INFO:receive:[36mMSG[39m <aperture.esper.net> Welcome to the EsperNet Internet Relay Chat Network Oracle
+INFO:receive:[36mMSG[39m <aperture.esper.net> Your host is aperture.esper.net[96.44.134.131/6667], running version charybdis-3.3.0
+INFO:receive:[36mMSG[39m <aperture.esper.net> This server was created Sat Feb 8 2014 at 21:42:24 PST
+INFO:receive:[36mMSG[39m <aperture.esper.net> aperture.esper.net charybdis-3.3.0 DQRSZagiloswz CFILPQbcefgijklmnopqrstvz bkloveqjfI
+INFO:receive:[36mMSG[39m <aperture.esper.net> CHANTYPES=# EXCEPTS INVEX CHANMODES=eIbq,k,flj,CFPcgimnpstz CHANLIMIT=#50 PREFIX=(ov)@+ MAXLIST=bqeI:100 MODES=4 NETWORK=EsperNet KNOCK STATUSMSG=@+ CALLERID=g :are supported by this server
+INFO:receive:[36mMSG[39m <aperture.esper.net> CASEMAPPING=rfc1459 CHARSET=ascii NICKLEN=30 CHANNELLEN=50 TOPICLEN=390 ETRACE CPRIVMSG CNOTICE DEAF=D MONITOR=100 FNC TARGMAX=NAMES1,LIST:1,KICK:1,WHOIS:1,PRIVMSG:4,NOTICE:4,ACCEPT:,MONITOR: :are supported by this server
+INFO:receive:[36mMSG[39m <aperture.esper.net> EXTBAN=$,acjorsxz WHOX CLIENTVER=3.0 SAFELIST ELIST=CTU are supported by this server
+INFO:receive:[36mMSG[39m <aperture.esper.net> There are 20 users and 7162 invisible on 12 servers
+INFO:receive:[36mMSG[39m <aperture.esper.net> 39 IRC Operators online
+INFO:receive:[36mMSG[39m <aperture.esper.net> 1 unknown connection(s)
+INFO:receive:[36mMSG[39m <aperture.esper.net> 5029 channels formed
+INFO:receive:[36mMSG[39m <aperture.esper.net> I have 367 clients and 1 servers
+INFO:receive:[36mMSG[39m <aperture.esper.net> 367 1266 Current local users 367, max 1266
+INFO:receive:[36mMSG[39m <aperture.esper.net> 7182 8825 Current global users 7182, max 8825
+INFO:receive:[36mMSG[39m <aperture.esper.net> Highest connection count: 1267 (1266 clients) (41105 connections received)
+INFO:receive:[36mMSG[39m <aperture.esper.net> - aperture.esper.net Message of the Day -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ------------------------------------------------------------------
+INFO:receive:[36mMSG[39m <aperture.esper.net> - .,-:;//;:=,
+INFO:receive:[36mMSG[39m <aperture.esper.net> - . :H@@@MM@M#H/.,+%;,
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ,/X+ +M@@M@MM%=,-%HMMM@X/,
+INFO:receive:[36mMSG[39m <aperture.esper.net> - -+@MM; $M@@MH+-,;XMMMM@MMMM@+-
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ;@M@@M- XM@X;. -+XXXXXHHH@M@M#@/.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ,%MM@@MH ,@%= .---=-=:=,.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - =@#@@@MX., -%HX$$%%%:;
+INFO:receive:[36mMSG[39m <aperture.esper.net> - =-./@M@M$ .;@MMMM@MM:
+INFO:receive:[36mMSG[39m <aperture.esper.net> - X@/ -$MM/ . +MM@@@M$
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ,@M@H: :@: . =X#@@@@-
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ,@@@MMX, . /H- ;@M@M=
+INFO:receive:[36mMSG[39m <aperture.esper.net> - .H@@@@M@+, %MM+..%#$.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - /MMMM@MMH/. XM@MH; =;
+INFO:receive:[36mMSG[39m <aperture.esper.net> - /%+%$XHH@$= , .H@@@@MX,
+INFO:receive:[36mMSG[39m <aperture.esper.net> - .=--------. -%H.,@@@@@MX,
+INFO:receive:[36mMSG[39m <aperture.esper.net> - .%MM@@@HHHXX$$$%+- .:$MMX =M@@MM%.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - =XMMM@MM@MM#H;,-+HMM@M+ /MMMX=
+INFO:receive:[36mMSG[39m <aperture.esper.net> - =%@M@M#@$-.=$@MM@@@M; %M%=
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ,:+$+-,/H#MMMMMMM@= =, 888
+INFO:receive:[36mMSG[39m <aperture.esper.net> - =++%%%%+/:-. 888
+INFO:receive:[36mMSG[39m <aperture.esper.net> - 888
+INFO:receive:[36mMSG[39m <aperture.esper.net> - 8888b. 88888b. .d88b. 888d888 888888 888 888 888d888 .d88b.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - "88b 888 "88b d8P Y8b 888P" 888 888 888 888P" d8P Y8b
+INFO:receive:[36mMSG[39m <aperture.esper.net> - .d888888 888 888 88888888 888 888 888 888 888 88888888
+INFO:receive:[36mMSG[39m <aperture.esper.net> - 888 888 888 d88P Y8b. 888 Y88b. Y88b 888 888 Y8b.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - "Y888888 88888P" "Y8888 888 "Y888 "Y88888 888 "Y8888
+INFO:receive:[36mMSG[39m <aperture.esper.net> - 888
+INFO:receive:[36mMSG[39m <aperture.esper.net> - 888
+INFO:receive:[36mMSG[39m <aperture.esper.net> - 888 . E S P E R . N E T (Los Angeles, California, USA)
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ------------------------------------------------------------------
+INFO:receive:[36mMSG[39m <aperture.esper.net> - aperture.esper.net is graciously sponsored by WintersNet.Net
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ------------------------------------------------------------------
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Ports: 5555, 6666-6669, 6697 (SSL) and 7000
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Administrators: TestDummy and Kramer
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Operators: Kurtis and elvenharps
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ------------------------------------------------------------------
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Useful Channels:
+INFO:receive:[36mMSG[39m <aperture.esper.net> - #dragonweyr For assistance requiring network staff.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - #help For assistance with IRC in general.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - #lobby A newbie-friendly IRC hangout.
+INFO:receive:[36mMSG[39m <aperture.esper.net> -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Join these and other channels with the '/join' command.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ------------------------------------------------------------------
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Users are required to abide by the guidelines set forth in the
+INFO:receive:[36mMSG[39m <aperture.esper.net> - EsperNet Acceptable Use Policy (http://esper.net/charter.php)
+INFO:receive:[36mMSG[39m <aperture.esper.net> - as well as applicable American and/or international laws.
+INFO:receive:[36mMSG[39m <aperture.esper.net> -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Bots are permitted, but are required to follow the same rules as
+INFO:receive:[36mMSG[39m <aperture.esper.net> - users, and the EsperNet Bot Policy (http://esper.net/bots.php).
+INFO:receive:[36mMSG[39m <aperture.esper.net> -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Flooding, harassment, spam or other abuse from either users or
+INFO:receive:[36mMSG[39m <aperture.esper.net> - bots alike is grounds for immediate removal from the network.
+INFO:receive:[36mMSG[39m <aperture.esper.net> -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - FSERVES ARE STRICTLY PROHIBITED!
+INFO:receive:[36mMSG[39m <aperture.esper.net> -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Your use of this network implies consent to a port scan to prevent
+INFO:receive:[36mMSG[39m <aperture.esper.net> - abuse by open proxies and otherwise compromised systems.
+INFO:receive:[36mMSG[39m <aperture.esper.net> -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - We reserve the right to remove anyone at any time for any reason.
+INFO:receive:[36mMSG[39m <aperture.esper.net> -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Esper serves many communities, so be aware that not every channel
+INFO:receive:[36mMSG[39m <aperture.esper.net> - is dedicated to the particular community you've come to see.
+INFO:receive:[36mMSG[39m <aperture.esper.net> -
+INFO:receive:[36mMSG[39m <aperture.esper.net> - New to IRC? Start here: http://www.esper.net/getting_started.php
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ------------------------------------------------------------------
+INFO:receive:[36mMSG[39m <aperture.esper.net> - Welcome to the EsperNet IRC Network. Enjoy your stay.
+INFO:receive:[36mMSG[39m <aperture.esper.net> - ------------------------------------------------------------------
+DEBUG:send:JOIN #rapid
+INFO:receive:[36mMSG[39m <aperture.esper.net> End of /MOTD command.
+INFO:receive:[36mMSG[39m <Oracle> +i
+DEBUG:send:nickserv IDENTIFY Oracle wombat1
+INFO:action:[32m!!! [37mIdentified
+INFO:receive:[36mMSG[39m <NickServ> This nickname is registered. Please choose a different nickname, or identify via /msg NickServ identify <password>.
+DEBUG:send:PRIVMSG #rapid :11Oracle bot has joined the session. Use 13?help 11for guidance.
+INFO:receive:[36mMSG[39m <Oracle> 
+INFO:receive:[36mMSG[39m <aperture.esper.net> #rapid Rapid Gaming community IRC | Website: http://rapidcraftmc.com | Minecraft Server: s.rapidcraftmc.com
+INFO:receive:[36mMSG[39m <aperture.esper.net> #rapid Manyman!~Manyman@CPE-121-220-218-161.lns5.way.bigpond.net.au 1391153261
+DEBUG:send:PRIVMSG #rapid :Toofifty Manyman RapidSurvival RapidCreative
+INFO:receive:[36mMSG[39m <aperture.esper.net> = #rapid Oracle @Toofifty @Manyman +RapidSurvival +RapidCreative
+INFO:receive:[36mMSG[39m <aperture.esper.net> #rapid End of /NAMES list.
+INFO:receive:[36mMSG[39m <NickServ> You are now identified for Oracle.
+INFO:receive:[36mMSG[39m <ChanServ> +o Oracle
+INFO:receive:[36mMSG[39m <RapidSurvival> There are 1 players online.
+INFO:receive:[36mMSG[39m <RapidCreative> There are no players online.
+INFO:action:[31mSPM [39mOracle: 2
+INFO:action:[31mSPM [39mNickServ: 1
+INFO:action:[31mSPM[39m Decremented FLOOD dict
+INFO:action:[31mSPM [39mOracle: 1
+INFO:action:[31mSPM[39m Decremented FLOOD dict
+INFO:receive:[36mMSG[39m <Toofifty> a
+INFO:receive:[36mMSG[39m <Toofifty> ?reload
+INFO:action:[35mCMD[39m reload | nick: Toofifty
+DEBUG:action:!!! - Config loaded
+DEBUG:send:NOTICE Toofifty :I didn't understand that. Please contact an admin for help.
+INFO:receive:[36mMSG[39m <Toofifty> ?reload
+INFO:action:[35mCMD[39m reload | nick: Toofifty
+DEBUG:action:!!! - Config loaded
+DEBUG:send:NOTICE Toofifty :I didn't understand that. Please contact an admin for help.
+INFO:receive:[36mMSG[39m <Toofifty> ?reload
+INFO:action:[35mCMD[39m reload | nick: Toofifty
+DEBUG:action:!!! - Config loaded
+DEBUG:send:NOTICE Toofifty :I didn't understand that. Please contact an admin for help.
+INFO:receive:[36mMSG[39m <Toofifty> ?restart
+DEBUG:send:NOTICE Toofifty :08Please slow down with your messages, or else you'll be kicked.
+INFO:action:[35mCMD[39m restart | nick: Toofifty
+INFO:action:!!! - Restart command issued by Toofifty
+DEBUG:send:PRIVMSG #rapid :07Restarting!07
+DEBUG:send:QUIT
+

@@ -1,0 +1,2 @@
+Do the RapidIRC bots sign in to nickserv automatically? RapidSurvival seems to never have +v set on it.
+Toofifty

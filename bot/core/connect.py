@@ -10,8 +10,10 @@ import os
 import spamhandler
 import yaml
 import logging
-send_log = logging.getLogger('send')
-action_log = logging.getLogger('action')
+import traceback
+from base import *
+
+c = config
 
 class gamechat(object):
     def __init__(self):
@@ -28,20 +30,13 @@ def set_active(bot):
 def set_inactive():
     gc.active = False
 
-def loadconfig():
-    with open('../bot/config.yml', 'r') as conf_file:
-        c = yaml.load(conf_file)
-    action_log.debug("!!! - Config loaded")
-    return c
-
 def getusers():
-    c = loadconfig()
-    s.send("NAMES " + c['channel'] + "\r\n")
-    send_log.debug("NAMES " + c['channel'] + "\r\n")
+    s.send("NAMES " + config.get('channel') + "\r\n")
+    send_log.debug("NAMES " + config.get('channel') + "\r\n")
     
 def say(msg):
-    s.send("PRIVMSG " + str(c['channel']) + " :" + str(msg) + "\r\n")
-    send_log.debug("PRIVMSG " + str(c['channel']) + " :" + str(msg))
+    s.send("PRIVMSG " + str(config.get('channel')) + " :" + str(msg) + "\r\n")
+    send_log.debug("PRIVMSG " + str(config.get('channel')) + " :" + str(msg))
     
     
 def whisper(msg, nick):
@@ -53,9 +48,8 @@ def whisper(msg, nick):
         send_log.debug("PRIVMSG " + gc.active + " :" + nick + " " + str(msg))
     
 def kick(nick, reason):
-    c= loadconfig()
-    s.send("KICK %s %s %s\r\n" % (c['channel'],nick, reason))
-    send_log.debug("KICK %s %s %s\r\n" % (c['channel'],nick, reason))
+    s.send("KICK %s %s %s\r\n" % (config.get('channel'),nick, reason))
+    send_log.debug("KICK %s %s %s\r\n" % (config.get('channel'),nick, reason))
 
 def stop(nick):
     action_log.info("!!! - Stop command issued! Closing.")
@@ -78,39 +72,36 @@ def restart(nick):
     os.execv(sys.executable, args)
 
 def identify():
-    s.send("nickserv IDENTIFY Oracle %s\r\n" % c['pass'])
-    send_log.debug("nickserv IDENTIFY Oracle %s" % c['pass'])
+    s.send("nickserv IDENTIFY Oracle %s\r\n" % config.get('pass'))
+    send_log.debug("nickserv IDENTIFY Oracle %s" % config.get('pass'))
 
 def ping(i):
     s.send("PONG %s\r\n" % i)
     send_log.debug("PONG %s\r\n" % i)
     
 def join():
-    s.send("JOIN %s\r\n" % c['channel'])
-    send_log.debug("JOIN %s" % c['channel'])
+    s.send("JOIN %s\r\n" % config.get('channel'))
+    send_log.debug("JOIN %s" % config.get('channel'))
     
 def mode(args):
-    c= loadconfig()
-    s.send("MODE " + c['channel'] + " " + " ".join(args) + "\r\n")
-    send_log.debug("MODE " + c['channel'] + " " + " ".join(args))
+    s.send("MODE " + config.get('channel') + " " + " ".join(args) + "\r\n")
+    send_log.debug("MODE " + config.get('channel') + " " + " ".join(args))
     
 def raw(args):
     s.send(" ".join(args) + "\r\n")
     send_log.debug(" ".join(args))
     
-def start():
-    global c
-    c = loadconfig()
-    
+def start():    
     try:
         global s
         s = socket.socket()
-        s.connect((c["host"], c['port']))
-        s.send('NICK '+c['nick']+'\r\n')
-        s.send('USER '+c['ident']+' '+c['host']+' bla :'+c['realname']+'\r\n')
+        s.connect((config.get('host'), config.get('port')))
+        s.send('NICK '+config.get('nick')+'\r\n')
+        s.send('USER '+config.get('ident')+' '+config.get('host')+' bla :'+config.get('realname')+'\r\n')
         return s, c
     except:
-        action_log.warning("!!! - Error! Failed to connect to " + c['channel'] + " on " + c['host'])
+        traceback.print_exc()
+        action_log.warning("!!! - Error! Failed to connect to " + config.get('channel') + " on " + config.get('host'))
         return False
         
 start()

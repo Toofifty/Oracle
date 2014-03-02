@@ -18,7 +18,7 @@ def run():
             rel = core.oracle.main(s, c)
             if rel:
                 reload(core.oracle) 
-                print("!!! - Reload complete")
+                print("!!!!!!!!!!!!!!!!!!! !!! Reload complete")
             else:
                 print("Process quit.")
         except:

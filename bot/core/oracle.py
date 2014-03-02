@@ -9,14 +9,13 @@ http://www.reddit.com/r/rapid/
 
 """
 
-import sys
 import string
-import urllib
 import traceback
 import time
-import calendar
 import os
-import logging
+import yaml
+import json
+import urllib
 from colorama import init, Fore, Back, Style
 init(autoreset=True)
 
@@ -28,158 +27,167 @@ import notes as n
 import youtube
 import cleverbot
 import spamhandler
-import format
 import misc
 import translate
 import gags
 import logger
+import games
+import base
+import input
+import score
+import threads
+from base import *
     
-f = format.formats()
+rps = None
+t = None
+trivia = None
+spam = None
+attention = False
+ignore_list = []
+acc_checked = False
+
 
 """
 Reload all modules except for oracle.py, connect.py and run.py
 connect.py and run.py cannot be reloaded without restarting the bot,
 and oracle.py needs to be reloaded from outside this module (run.py)
 """
-def rl(nick):
-    modules = [m, e, v, n, youtube, cleverbot, spamhandler, format, misc, translate, gags, logger]
+def rl():
+    if spam != None:
+        spam.disable()
+    if trivia != None:
+        trivia.disable()
+
+    modules = [
+        m, e, v, n, youtube, cleverbot, spamhandler,
+        format, misc, translate, gags, logger, games,
+        base, input, score, threads,
+        ]
+        
     for mod in modules:
         reload(mod)
-    
-    action_log = logging.getLogger('action')
-    action_log.info(Fore.RED + "RLD" + Fore.RESET + " Reload issued by " + nick)
         
     global do_reload
     do_reload = True
+    
+def custom_str_constructor(loader, node):
+    return loader.construct_scalar(node).encode('utf-8')
+    
+yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)
 
 """
 Prints the commands and help list to the user
 """
 def helpc(nick, args):
     rank = v.getrank(nick)
-     
-    if(args.lower() == "emotes"):
-        c.whisper("~ " + f.BOLD + "Emotes" + f.BOLD + " ~", nick)
-        c.whisper("- ?fliptable > (╯°□°)╯︵ ┻━┻ ", nick)
-        c.whisper("- ?puttableback > ┬─┬﻿ ノ( ゜-゜ノ)", nick)
-        c.whisper("- ?ohyou > ¯_(ツ)_/¯", nick)
-        c.whisper("- ?fff > ლ(ಠ益ಠლ)", nick)
-        c.whisper("- ?disapprove > ಠ_ಠ", nick)
-        c.whisper("- ?crie > ಥ_ಥ", nick)
-        c.whisper("- ?lenny > ( ͡° ͜ʖ ͡°)", nick)
-        c.whisper("- ?dongers > ヽ༼ຈل͜ຈ༽ﾉ", nick)
-        c.whisper("- ?butterfly > Ƹ̵̡Ӝ̵̨̄Ʒ", nick)
-        c.whisper("- ?partytime > ┏(-_-)┛┗(-_-﻿ )┓┗(-_-)┛┏(-_-)┓", nick)
-        c.whisper("- ?polarbear > ˁ˚ᴥ˚ˀ", nick)
-        c.whisper("- ?gun > ︻╦╤─", nick)
-        c.whisper("- ?pirate > ✌(◕‿-)✌", nick)
-        c.whisper("- ?happybirthday > ¸¸♬·¯·♩¸¸♪·¯·♫¸¸Happy Birthday To You¸¸♬·¯·♩¸¸♪·¯·♫¸¸", nick)
-        c.whisper("- ?sunglasses > ( •_•) ( •_•)>⌐■-■ (⌐■_■)", nick)
-        c.whisper("- ?rage > t(ಠ益ಠt)", nick)
-        c.whisper("- ?cards > [♥]]] [♦]]] [♣]]] [♠]]]", nick)
-        c.whisper("- ?gimme > ༼ つ ◕_◕ ༽つ", nick)
-        c.whisper("- ?monocle > ಠ_ರೃ", nick)
-        c.whisper("- ?ghost > ‹’’›(Ͼ˳Ͽ)‹’’›", nick)
-        c.whisper("- ?why > ლ(`◉◞౪◟◉‵ლ)", nick)
-        c.whisper("- ?praise > し(*･∀･)／♡＼(･∀･*)ノ", nick)
-    elif(args.lower() == "server"):
-        c.whisper("~ " + f.BOLD + "Server" + f.BOLD + " ~", nick)
-        c.whisper("- ?events > Next upcoming event", nick)
-        c.whisper("- ?utc > Time now, in UTC", nick)
-        c.whisper("- ?nether [x] [y] [z] > Convert xyz overworld coordinates to the corresponding nether coordinates", nick)
-        c.whisper("- ?overworld [x] [y] [z] > Vice-versa of above", nick)
-        c.whisper("x ?poll [time] [question] [answer 1] [answer 2] ... [answer n] > WIP, do not use", nick)
-        c.whisper("x ?vote [answer] > WIP, do not use", nick)
-    elif(args.lower() == "personal"):
-        c.whisper("~ " + f.BOLD + "Personal" + f.BOLD + " ~", nick)
-        c.whisper("- ?notes [new|edit|delete] [filename] [text] > Create and delete notes", nick)
-        c.whisper("- ?notes [search|get] [searchterm|filename] > Search all notes for a specific term", nick)
-        c.whisper("- ?notes listall > List all notes", nick)
-        c.whisper("- ?mail send [recipient] [title] [message...] > Send mail to a player, who will be notified when they join", nick)
-        c.whisper("- ?mail [read|delete] [mail] > Read the contents of the mail or delete it", nick)
-        c.whisper("- ?mail check > List all mail addressed to you", nick)
-    elif(args.lower() == "other"):
-        c.whisper("~ " + f.BOLD + "Other" + f.BOLD + " ~", nick)
-        c.whisper("- ?pick [choice 1] [choice 2] ... [choice n] > Picks a choice at random", nick)
-        c.whisper("- ?cb [message] > Chat with cleverbot (experimental)", nick) 
-        c.whisper("- ?diamonds [target] > Gives target 64 diamonds in-game", nick) 
-        c.whisper("- ?ayylmao > Link to ayy lmao image", nick) 
-    elif(args.lower() == "admin") and (rank >= 2):
-        c.whisper("~ " + f.BOLD + "Admin" + f.BOLD + " ~", nick)
-        c.whisper("- ?close > Turn off the Oracle bot", nick)
-        c.whisper("- ?restart > Restart the bot, to reload settings or code", nick)
-        c.whisper("- ?reload > Reload the bot, to reload settings or code without disconnecting", nick)
-        c.whisper("- ?sreload > Reload the bot, silently", nick)
-        c.whisper("- ?say [message] > Instruct Oracle to repeat the message", nick)
-        c.whisper("- ?attention > Alert all users in irc", nick)
-        c.whisper("- ?setrank [target] [rank] > Set a user's rank, allowing/restricting permission to certain actions. Use ?help ranks for more info", nick)
-        c.whisper("- ?getrank [target] > Return user's rank", nick)
-        c.whisper("- ?ban [target] > Set user's rank to 0. Oracle will auto-kick them if they join", nick)
-    elif(args.lower() == "dev") and (rank >= 3):
-        c.whisper("~ " + f.BOLD + "Developer" + f.BOLD + " ~", nick)
-        c.whisper("- ?makevar [target] > Create a VAR file for target", nick)
-        c.whisper("- ?getvar [target] [var] > Retrieves a specific value", nick)
-        c.whisper("- ?setvar [target] [var] [value] > Sets a specific value", nick)
-        c.whisper("- ?deletevar [target] > Deletes the VAR file for target", nick)
-        c.whisper("- ?resetvar [target] > Combined command for both deletevar and makevar", nick)
-        c.whisper("- ?cls > Clear console", nick)
-        c.whisper("- ?sayr > Instruct Oracle to repeat the message (+ formats). See ?help formats", nick)
-        c.whisper("- ?join > Imitate a join event", nick)
-        c.whisper("- ?raw [args] > Send a raw message to IRC from Oracle", nick)
-        c.whisper("- ?^[target] ?[cmd] > Sudo any command onto another user", nick)
-    elif(args.lower() == "formats") and (rank >= 3):
-        c.whisper("~ " + f.BOLD + "Formats" + f.BOLD + " ~", nick)
-        c.whisper("- Formats are activated by using &N where N is 0-15 or b.", nick)
-        c.whisper("- Can really only be used through hard-code or ?sayr", nick)
-    elif(args.lower() == "ranks") and (rank >= 2):
-        c.whisper("~ " + f.BOLD + "Ranks" + f.BOLD + " ~", nick)
-        c.whisper("- 0 > Banned user. Will be kicked automatically after joining.", nick)
-        c.whisper("- 1 > Default user. Can do most commands.", nick)
-        c.whisper("- 2 > Moderator. Can instruct Oracle to kick, mute or ban (lower ranked) users.", nick)
-        c.whisper("- 3 > Administrator. Access to almost all commands needed, can restart/close Oracle if necessary.", nick)
-        c.whisper("- 4 > Developer. Access to specific debug commands. If need be, admins can set themselves to dev with ?setrank.", nick)
-    else:
-        c.whisper(f.LIGHTBLUE + "~ Welcome to the Oracle guide! Commands are categorised for neatness.", nick)
-        c.whisper(f.LIGHTBLUE + "Use ?help [category] to list those commands. Categories:",nick)
-        if rank >= 4:
-            c.whisper(f.LIGHTBLUE + f.BOLD + "Emotes - Server - Personal - Other - Admin - Dev - Ranks - Formats", nick)  
-        elif rank >= 3:
-            c.whisper(f.LIGHTBLUE + f.BOLD + "Emotes - Server - Personal - Other - Admin - Ranks", nick)  
+    
+    with open('../bot/help.yml', 'r') as help_file:
+        help = yaml.load(help_file)
+        
+    ranks = {'dev': 4, 
+        'formats': 4,
+        'admin': 3, 
+        'ranks': 2, 
+        'other': 1,
+        'personal': 1,
+        'server': 1,
+        'emotes': 1,
+        'default': 1,
+        'categories': 1,
+        }
+        
+    try:
+        if help.has_key(args.lower()):
+            if rank >= ranks[args.lower()]:
+                c.whisper(f.BLUE + "~ " + f.BOLD + args.title() + f.BOLD + " ~", nick)
+                sorted_list = sorted(help[args.lower()]) 
+                for command in sorted_list:
+                    list = help[args.lower()][command]
+                    if list.has_key('args'):
+                        c.whisper(f.WHITE + "- " + f.CYAN + "" + command.upper().strip('123') + " " + list['args'] + f.WHITE + " > " + list['desc'], nick)
+                    else:
+                        c.whisper(f.WHITE + "- " + f.CYAN + "" + command.upper().strip('123') + f.WHITE + " > " + list['desc'], nick)
+            else:
+                raise Warning
+        elif args.lower() != "no":
+            done = False
+            for set in help:
+                if rank >= ranks[set]:
+                    for command in help[set]:
+                        if str(command).startswith(args.lower()):
+                            list = help[set][command]
+                            if list.has_key('args'):
+                                c.whisper(f.WHITE + "- " + f.CYAN + "" + command.upper().strip('123') + " " + list['args'] + f.WHITE + " > " + list['desc'], nick)
+                            else:
+                                c.whisper(f.WHITE + "- " + f.CYAN + "" + command.upper().strip('123') + f.WHITE + " > " + list['desc'], nick)
+                            done = True
+            if not done:
+                raise Warning
         else:
-            c.whisper(f.LIGHTBLUE + f.BOLD + "Emotes - Server - Personal - Other", nick)  
+            raise Warning
+    except:
+        for line in help['default']:
+            c.whisper(format.replace(line), nick)
+        c.whisper(format.replace(help['categories'][int(rank)]), nick)
  
 """
 Asks cleverbot a question, and logs and says the response (broken)
 Cleverbot API has been discontinued and so will probably no longer work
 """
 def cb(ask, nick):
-    if c.loadconfig['cleverbot']:
+    if config.get('cleverbot'):
         cbot = cleverbot.Session()
         response = cbot.Ask(" ".join(ask))
-        action_log = logging.getLogger('action')
         action_log.info(Fore.CYAN + "CBT" + Fore.RESET + " " + response)
         c.say(nick + ": " + response)
     else:
         c.whisper("Cleverbot is currently disabled.", nick)
+        
+"""
+Check if a user is whitelisted through Jake's MetisWeb database
+"""
+def iswhitelisted(nick):
+    try:
+        content = urllib.urlopen(config.get('whitelist-location'))
+        data = json.load(content)
+        print data
+        for name in data:
+            action_log.info(name)
+            if name == nick:
+                return True
+        return False
+    except:
+        traceback.print_exc()
+        return False
+        
+def confirm_account(nick):
+    acc_checked = True
+    if config.get('use-json-whitelist'):
+        if not iswhitelisted(nick):
+            c.say("Kicking user: " + nick + ". Reason: Not on the whitelist.")
+            #c.kick(nick, "NotWhitelisted")
+        else:
+            c.say(nick + " is whitelisted.")
 
 """
 Actions to perform on user join
 """
 def join(nick):
-    rank = v.getrank(nick)
-    config = c.loadconfig()
-    
-    if not v.listvar(nick) and config['auto-add']:
+    rank = v.getrank(nick)    
+    if not v.listvar(nick) and config.get('auto-add'):
         v.makevarfile(nick)
+        
+    c.raw("WHOIS " + nick)
+    acc_checked = False
     
-    if config['join-message']:
-        c.say(f.LIGHTBLUE + "Welcome to the Rapid IRC, " + f.PURPLE + nick + f.LIGHTBLUE + ".")
+    if config.get('join-message'):
+        c.whisper(f.LIGHTBLUE + "Welcome to the Rapid IRC, " + f.PURPLE + nick + f.LIGHTBLUE + ".", nick)
     
-    if rank == 0 and config['auto-kick']:
-        c.kick(nick, "You were kicked by Oracle, possibly because you were not whitelisted in the IRC? Please talk to an admin about this.")
+    if rank == 0 and config.get('auto-kick'):
+        c.kick(nick, "NotWhitelisted")
         
     elif rank >= 3:
-        if config['auto-op']:
+        if config.get('auto-op'):
             c.mode(["+o", nick])
             c.whisper("You have been opped by Oracle", nick)
         else:
@@ -188,13 +196,12 @@ def join(nick):
     else:
         c.mode(["+v", nick])
        
-    if config['check-mail']:
+    if config.get('check-mail'):
         if not m.check(nick):
             c.whisper("You have no new mail.", nick)
         else:
             c.whisper("You have mail! Use '?mail check' to see.", nick)
         
-    action_log = logging.getLogger('action')
     action_log.info(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))    
     
 """
@@ -202,9 +209,7 @@ Splits the message, processes the commands and does all the relevant
 functions required. Should reverse the 'rank' if statements but it's
 not much of a problem.
 """
-def processcmd(nick, msg):
-    action_log = logging.getLogger('action')
-    
+def processcmd(nick, msg):    
     cmd = msg.split(" ")
     rank = v.getrank(nick)
     action_log.info(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | nick: " + nick)
@@ -213,7 +218,7 @@ def processcmd(nick, msg):
         # regular user
         # rank = 1
         if rank >= 1:
-            # emotes #
+            #! emotes !#
             if cmd[0] == "fliptable": c.say("(╯°□°)╯︵ ┻━┻")
             elif cmd[0] == "puttableback": c.say("┬─┬﻿ ノ( ゜-゜ノ)")
             elif cmd[0] == "ohyou": c.say("¯_(ツ)_/¯")
@@ -243,7 +248,33 @@ def processcmd(nick, msg):
             # tears can be potentially dangerous, limited to admin +
             elif cmd[0] == "tears" and rank >= 3: c.say(" Ỏ̷͖͈̞̩͎̻̫̫̜͉̠̫͕̭̭̫̫̹̗̹͈̼̠̖͍͚̥͈̮̼͕̠̤̯̻̥̬̗̼̳̤̳̬̪̹͚̞̼̠͕̼̠̦͚̫͔̯̹͉͉̘͎͕̼̣̝͙̱̟̹̩̟̳̦̭͉̮̖̭̣̣̞̙̗̜̺̭̻̥͚͙̝̦̲̱͉͖͉̰̦͎̫̣̼͎͍̠̮͓̹̹͉̤̰̗̙͕͇͔̱͕̭͈̳̗̭͔̘̖̺̮̜̠͖̘͓̳͕̟̠̱̫̤͓͔̘̰̲͙͍͇̙͎̣̼̗̖͙̯͉̠̟͈͍͕̪͓̝̩̦̖̹̼̠̘̮͚̟͉̺̜͍͓̯̳̱̻͕̣̳͉̻̭̭̱͍̪̩̭̺͕̺̼̥̪͖̦̟͎̻̰_á»")
             
-            # other #
+            #! other !#
+            elif cmd[0] == "rps":
+                target = cmd[1]
+                global rps
+                rps = games.rps(nick, target)
+                c.whisper(nick + " has challenged you to a game of rock, paper scissors.", target)
+                c.whisper("To participate, use " + f.BLUE + "/msg Oracle ?[rock/paper/scissors] (use /imsg if you're in-game)", target)
+                c.whisper("You have 30 seconds.", target)
+                c.whisper("You have challenged " + target + " to a game of rock, paper scissors.", nick)
+                c.whisper("To participate, use " + f.BLUE + "/msg Oracle ?[rock/paper/scissors] (use /imsg if you're in-game)", nick)
+                c.whisper("You have 30 seconds.", nick)
+                
+            
+            elif cmd[0] == "rock" or cmd[0] == "paper" or cmd[0] == "scissors":
+                if rps != None:
+                    if rps.guess(cmd[0], nick):
+                        c.whisper("Decision accepted", nick)
+                        c.whisper("Your opponent has made a decision", rps.get_opponent(nick))
+                    else:
+                        c.whisper("You're not in this RPS game!", nick)
+                else:
+                    c.whisper("There is no RPS game at the moment.", nick)
+                    
+            elif cmd[0] == "a":
+                global trivia
+                trivia.guess(cmd[1:], nick)
+            
             elif cmd[0] == "help" or cmd[0] == "what":
                 if(len(cmd) < 2): helpc(nick, "no")
                 else: helpc(nick, cmd[1])
@@ -254,7 +285,7 @@ def processcmd(nick, msg):
                 c.say(nick + ": " + misc.pick(cmd[1:]))
                 
             elif cmd[0] == "diamonds":
-                if c.loadconfig()['rick-roll']:
+                if config.get('rick-roll'):
                     gags.rick_roll(nick, cmd[1])
                 else:
                     c.whisper(f.WHITE + "64 diamonds have been credited to the Minecraft account " + f.RED + nick + f.WHITE + ".", nick)
@@ -265,7 +296,23 @@ def processcmd(nick, msg):
             elif cmd[0] == "ayylmao":
                 c.say("http://puu.sh/6wo5D.png")
                 
-            # server #
+            elif cmd[0] == "score":
+                if cmd[1] == "check":
+                    if len(cmd) > 2 and rank >= 3:
+                        c.whisper(cmd[2] + " has " + str(score.get(cmd[2])) + " points.", nick)
+                    else:
+                        c.whisper("Your have " + str(score.get(nick)) + " points.", nick)
+                elif cmd[1] == "top":                        
+                    list = score.get_leader_boards()
+                    amount = int(cmd[2]) if len(cmd) > 2 else 5
+                    i = 1
+                    for line in list:
+                        c.whisper(str(i) + ". " + line[0] + " - " + str(line[1]), nick)
+                        i += 1
+                        if i > amount:
+                            break
+                
+            #! server !#
             elif cmd[0] == "events":
                 results = e.get()
                 
@@ -283,7 +330,7 @@ def processcmd(nick, msg):
             elif cmd[0] == "overworld":
                 c.whisper(misc.overworldposition(int(cmd[1]), int(cmd[2]), int(cmd[3])), nick)
       
-            # personal #
+            #! personal !#
             elif cmd[0] == "mail":
                 try:
                     if cmd[1].lower() == "check":
@@ -348,14 +395,18 @@ def processcmd(nick, msg):
                 except:
                     traceback.print_exc()
                     c.whisper("Usage: ?notes [new|delete|edit|listall|search|get]", nick)
+        else:
+            c.whisper("Seems like you don't have access to these commands. Message an admin for help.", nick)
             
-        # moderator
+        #! moderator !#
         # rank = 2
         if rank >= 2:
             if cmd[0] == "say":
                 c.say(format.replace(" ".join(cmd[1:])))
             
             elif cmd[0] == "attention":
+                global attention
+                attention = True
                 c.getusers()
                 
             elif cmd[0] == "ban" :
@@ -370,21 +421,23 @@ def processcmd(nick, msg):
                     c.kick(cmd[1], " ".join(cmd[2:]))
                     c.whisper("User kicked for " + " ".join(cmd[2:]) + ".", nick)
         
-        # admin
+        #! admin !#
         # rank = 3
         if rank >= 3:
             if cmd[0] == "close":
                 c.stop(nick)
+                do_exit = True
                 
             elif cmd[0] == "restart" :
                 c.restart(nick)
                 
             elif cmd[0] == "reload":
-                rl(nick)
+                action_log.info(Fore.RED + "RLD" + Fore.RESET + " Reload issued by " + nick)
+                rl()
                 c.say(f.YELLOW + "Reload complete.")
                 
             elif cmd[0] == "sreload":
-                rl(nick)
+                rl()
                 c.whisper(f.YELLOW + "Silent reload complete.", nick)
                 
             elif cmd[0] == "setrank":
@@ -396,8 +449,64 @@ def processcmd(nick, msg):
                 
             elif cmd[0] == "getrank":
                 c.whisper(cmd[1] + "'s rank is " + str(v.getvar(cmd[1], "rank")) + ".", nick)
-            
-        # developer
+                
+            elif cmd[0] == "flood":
+                if cmd[1] == "reset":
+                    spam.clear()
+                    c.whisper("Cleared FLOOD dictionary", nick)
+                elif cmd[1] == "decrement":
+                    spam.decrement()
+                    c.whisper("FLOOD decrement performed", nick)
+                    
+            elif cmd[0] == "randompoints":
+                if cmd[1] == "run":
+                    randompoints.poll_users()
+                    time.sleep(1)
+                    randompoints.reward()
+                
+            elif cmd[0] == "trivia":
+                if cmd[1] == "new":
+                    c.say("[" + f.PURPLE + "Trivia" + f.WHITE + "] New round started by " + f.BLUE + nick)
+                    trivia._runnable()
+                elif cmd[1] == "off":
+                    trivia.disable()
+                    c.say("[" + f.PURPLE + "Trivia" + f.WHITE + "] Disabled by " + f.BLUE + nick)
+                elif cmd[1] == "on":
+                    if trivia._getdisabled():  
+                        del trivia
+                        trivia = games.trivia()
+                        c.say("[" + f.PURPLE + "Trivia" + f.WHITE + "] Re-enabled by " + f.BLUE + nick)
+                elif cmd[1] == "info":
+                    c.whisper(trivia.getinfo(), nick)
+                    
+            elif cmd[0] == "score":
+                if cmd[1] == "reset":
+                    if score.reset(cmd[2]):
+                        c.whisper("Successfully reset " + cmd[2] + "'s score.", nick)
+                    else:
+                        c.whisper("Reset failed.", nick)
+                elif cmd[1] == "add":
+                    points = score.add(cmd[2], cmd[3])
+                    if not points:
+                        c.whisper("Points failed to add.", nick)
+                    else:
+                        c.whisper("Sucessfully added points, " + cmd[2] + " now has " + str(points) + " points.", nick)
+                        
+            elif cmd[0] == "ignore":
+                try:
+                    ignore_list.append(cmd[1])
+                    c.whisper("Successfuly added " + cmd[1] + " to ignore list.", nick)
+                except:
+                    c.whisper("Ignore unsuccessful.", nick)
+                
+            elif cmd[0] == "pardon":
+                try:
+                    del ingore_list[cmd[1]]
+                    c.whisper("Successfully pardoned " + cmd[1] + ".", nick)
+                except:
+                    c.whisper("Pardon unsuccessful. Perhaps " + cmd[1] + " is not currently being ignored.", nick)
+                        
+        #! developer !#
         # rank = 4
         if rank >= 4:
             if cmd[0] == "makevar":
@@ -459,15 +568,34 @@ def processcmd(nick, msg):
                 
             elif cmd[0] == "raw":
                 c.raw(cmd[1:])
-                    
                 
-        else:
-            c.whisper("Unknown command, or you don't have permission.", nick)
+            elif cmd[0] == "config":
+                if cmd[1] == "reload":
+                    try:
+                        config.reload()
+                        c.whisper("Config reloaded.", nick)
+                    except:
+                        traceback.print_exc()
+                        c.whisper("Error reloading config", nick)
+                elif cmd[1] == "set":
+                    try:
+                        config.set(cmd[2], cmd[3:])
+                        c.whisper("Config set.", nick)
+                    except:
+                        traceback.print_exc()
+                        c.whisper("Error setting config", nick)
+                elif cmd[1] == "get":
+                    try:
+                        c.whisper(config.get(cmd[2]), nick)
+                    except:
+                        traceback.print_exc()
+                        c.whisper("Error getting config", nick)
+                        
         
     except:
         # any and every error will throw this
         traceback.print_exc()
-        c.whisper("I didn't understand that. Please contact an admin for help.",nick)
+        c.whisper("Oops! Something went wrong. Please contact an admin for help.",nick)
 
 """
 Main loop, everything happens through this loop
@@ -476,16 +604,24 @@ lines that are iterated over as incoming messages.
 Returning false will close Oracle, and true will reload oracle.py
 """       
 def mainloop(s, config):
-    
-    # get the loggers
-    receive_log = logging.getLogger('receive')
-    action_log = logging.getLogger('action')
-        
     readbuffer = ""
     
     global do_reload
     global do_exit
     do_reload = do_exit = False
+    
+    if config.get('trivia'):
+        global trivia
+        trivia = games.trivia()
+        
+    if config.get('command-line'):
+        global commandline
+        commandline = input.cmd()
+        
+    if config.get('random-points'):
+        global randompoints
+        randompoints = games.rp()
+        
     
     while True:
         try:
@@ -510,7 +646,7 @@ def mainloop(s, config):
                 c.ping(line[1])
                 
             # join the channel
-            elif(line[1] == "376" and line[2] == config['ident']): 
+            elif(line[1] == "376" and line[2] == config.get('ident')): 
                 c.join()
                 
             # identify with nickserv after being prompted
@@ -520,15 +656,22 @@ def mainloop(s, config):
                 
             # return of NAMES list
             elif(line[1] == "353"): 
-                c.say("".join(message.split(":")[2].replace("@","").replace("+","").replace("Oracle ","")))
+                nicks = "".join(message.split(":")[2].replace("@","").replace("+","").replace("Oracle ",""))
+                global attention
+                if attention:
+                    c.say(nicks)
+                    attention = False
+                users = nicks.replace(config.get('server-bots')[0],"").replace(config.get('server-bots')[1],"")
+                if config.get('random-points'):
+                    randompoints.add_users(users)
                 
             # realise that Orace just joined, say welcome
             elif("JOIN" in line) and ("Oracle" in message):
                 # if welcome-message == false
-                if not config['welcome-message']:
+                if not config.get('welcome-message'):
                     pass
                 else:
-                    c.say(format.replace(config['welcome-message']))
+                    c.say(format.replace(config.get('welcome-message')))
                 
             # throw nick to join() after they join
             elif ("JOIN" in line or ":JOIN" in line) and not ("Oracle" in message):
@@ -557,53 +700,78 @@ def mainloop(s, config):
                 # the message is bad
                 break
                 
+            # reply from WHOIS
+            if "is logged in as" in msg and ".esper.net" in nick:
+                confirm_account(msg.split(" ",2)[1])
+                
             # reset variable that tells connect if it is a
             # message from a server bot
             if c.getactive():
                 c.set_inactive()
-                
-            # check if the nick is one of the RapidIRC bots
-            # change nick and msg accordingly
-            for bot in config['server-bots']:
-                if nick == bot and msg.startswith("<"):
-                    nick, msg = msg.split("<",1)[1].split("> ",1)
-                    c.set_active(bot)
             
             # throw msg and nick to spamhandler
-            if config['spam-handler']:
-                if not c.getactive():
-                    spamhandler.handler(nick, msg) 
+            if config.get('spam-handler'):
+                if spam == None:
+                    global spam
+                    spam = spamhandler.handler()
+                sh = True
+                for bot in config.get('server-bots'):
+                    if nick == bot:
+                        sh = False
+                if sh:
+                    spam.increment(nick, msg) 
+                
+            # ignore list doesn't work properly, but meh
+            if not nick in ignore_list or nick == 'Toofifty':
+                # check if the nick is one of the RapidIRC bots
+                # change nick and msg accordingly
+                for bot in config.get('server-bots'):
+                    if nick == bot:
+                        if msg.startswith("<"):
+                            nick, msg = msg.split("<",1)[1].split("> ",1)
+                            c.set_active(bot)
+                            
+                        elif msg.split(" ")[1] == "whispers":
+                            nick, msg = msg.split(" whispers ", 1)
+                            c.set_active(bot)
+                            
+                        elif msg.startswith("Online Players:"):
+                            users = msg.replace("Online Players:", "")
+                            if not users == "":
+                                randompoints.add_users(users)
 
-            # handle sudo commands
-            if msg.startswith(config['sudo-char']) and v.getrank(nick) >= 4:
-                msg = msg.replace(config['sudo-char'],"")
-                nick, msg = msg.split(" ",1)
+                # handle sudo commands
+                if msg.startswith(str(config.get('sudo-char'))) and v.getrank(nick) >= 4:
+                    msg = msg.replace(config.get('sudo-char'),"")
+                    nick, msg = msg.split(" ",1)
 
-            # identify commands from msg
-            for char in config['command-chars']:
-                if msg.startswith(char):
-                    msg = msg.lower().replace(char,"")
-                    processcmd(nick, msg)
+                # identify commands from msg
+                for char in config.get('command-chars'):
+                    if msg.startswith(char):
+                        # make sure to only get rid of one '?'
+                        msg = msg.split(char, 1)[1]
+                        processcmd(nick, msg)
 
-            # throw msg to translator
-            if config['translate']:
-                if translate.requires_translate(msg):
-                    action_log.info("TRN Translating...")
-                    c.say("I think you mean: " + translate.translate_result(msg))
+                # throw msg to translator
+                if config.get('translate'):
+                    if translate.requires_translate(msg):
+                        action_log.info("TRN Translating...")
+                        c.say("I think you mean: " + translate.translate_result(msg))
 
-            # throw msg and nick to gags
-            if config['say-responses']:
-                gags.get_response(nick, msg)
-  
-            # check and handle youtube links
-            if config['youtube-links']:
-                if(msg.startswith("http://www.youtube.com/")):
-                    try:
-                        author, title = youtube.processlink(msg)
-                        c.say(f.BOLD + f.RED + "YouTube Video" + f.BOLD + f.WHITE + " - " + title + " by " + author)
-                    except:
-                        c.say(f.BOLD + f.RED + "Youtube video failed" + f.BOLD + f.WHITE + " - 404 Not Found")
+                # throw msg and nick to gags
+                if config.get('say-responses'):
+                    gags.get_response(nick, msg)
+      
+                # check and handle youtube links
+                if config.get('youtube-links'):
+                    if(msg.startswith("http://www.youtube.com/")):
+                        try:
+                            author, title = youtube.processlink(msg)
+                            c.say(f.BOLD + f.RED + "YouTube Video" + f.BOLD + f.WHITE + " - " + title + " by " + author)
+                        except:
+                            c.say(f.BOLD + f.RED + "Youtube video failed" + f.BOLD + f.WHITE + " - 404 Not Found")
             
+            # tell run.py to reload or exit
             if do_reload:
                 return True
             if do_exit:
