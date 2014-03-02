@@ -50,55 +50,30 @@ Functionalities
 ---------------
 
 * Integration with the plugin [RapidIRC](https://github.com/Toofifty/RapidIRC)
-
 * Grab Youtube video meta-data after posting a link (when enabled)
-    
 * Respond to common phrases (when enabled)
-    
 * Correct some common typos/abbreviations (when enabled)
-  
 * Sudo commands ( ?^[user] [command] ) ('?^' is configurable)
-    
 * Configurable command prefix (default: '?', '!', 'Oracle, ')
-  
 * Configurable spam handler
-	
 * Mail system + check on join (when enabled)
-	
 * Notes system
-	
 * Configurable IRC options
-
 * Configurable functionalities
-	
 * Configurable log-to-file
-	
 * Per-user variables (rank, etc)
-	
 * Clean cmd output (configurable)
-	
 * Reload without leaving IRC session
-	
 * Auto-kicking of banned (rank: 0) users (when enabled)
-	
 * Auto-opping of admin+ (rank: 3) users (when enabled)
-	
 * Auto-creation of var files (when enabled)
-	
 * [Cleverbot](http://www.cleverbot.com/) integration (broken)
-	
 * Easy in-code formatting
-	
 * Configurable welcome and join messages
-
 * Play Rock Paper Scissors
-
 * Trivia
-
 * Input commands in the terminal
-
 * Reload/set/get config on the fly
-	
 * Only crashes sometimes
 
 Planned features/TO DO
