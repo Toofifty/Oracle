@@ -9,6 +9,8 @@ Current features
 Commands
 --------
 
+```
+
     Emotes: 
 	
     fliptable		ohyou			crie			butterfly		gun
@@ -45,6 +47,8 @@ Commands
 	makevar			deletevar		cls				raw
 	getvar			resetvar		sayr			config
 	setvar			formats			join
+	
+```
 
 Functionalities
 ---------------
@@ -104,9 +108,18 @@ Functionalities
 Planned features/TO DO
 ======================
   
+<<<<<<< HEAD
 * More IRC games
   
 * Leave a message/announcement
+=======
+```
+    IRC games
+  
+    Leave a message/announcement
+    
+```
+>>>>>>> 4514fee857de739e279b79278b37c9d51a746355
 
 License
 =======
