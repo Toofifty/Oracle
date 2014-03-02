@@ -1,6 +1,4 @@
-=====================
-Toofifty's Oracle Bot
-=====================
+![Oracle](other/logo.jpg)
 
 Oracle IRC bot for #rapidcraft, used to moderate and automate some actions within the chat.
 Requires Python 2.7, multiplatform
