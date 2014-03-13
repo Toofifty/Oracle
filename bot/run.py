@@ -9,19 +9,19 @@ def run():
     core.logger.create_loggers()
 
     try:
-        s, c = core.connect.start()
+        socket = core.connect.start()
     except:
         sys.exit("There was an error connecting to the server.")
         
     while True:
         try:
-            rel = core.oracle.main(s, c)
-            if rel:
+            RELOAD = core.oracle.main(socket)
+            if RELOAD:
                 reload(core.oracle) 
                 print("!!!!!!!!!!!!!!!!!!! !!! Reload complete")
             else:
-                print("Process quit.")
-        except:
+                core.connect.stop("Administrator")
+        except Exception:
             traceback.print_exc()
             
 run()

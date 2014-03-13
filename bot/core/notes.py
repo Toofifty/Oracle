@@ -1,20 +1,18 @@
-"""
-Oracle note saving script
-"""
-
 import os
 
+# Works extremely similarily to mail
+
 def new(filename, text):
-    if os.path.exists('../bot/notes/' + filename + '.txt'):
+    if os.path.exists('notes/' + filename + '.txt'):
         return False
     else:
-        f = file('../bot/notes/' + filename + '.txt', 'w')
+        f = file('notes/' + filename + '.txt', 'w')
         f.write(text)
         f.close()
         return True
 
 def listall():
-    return os.listdir('../bot/notes/')
+    return os.listdir('notes/')
 
 def find(term):
     tlist = list()
@@ -25,25 +23,25 @@ def find(term):
     return results
 
 def delete(filename):
-    if os.path.exists('../bot/notes/' + filename + '.txt'):
-        os.remove('../bot/notes/' + filename + '.txt')
+    if os.path.exists('notes/' + filename + '.txt'):
+        os.remove('notes/' + filename + '.txt')
         return True
     else:
         return False
 
 def edit(filename, text):
-    if not os.path.exists('../bot/notes/' + filename + '.txt'):
+    if not os.path.exists('notes/' + filename + '.txt'):
         return False
     else:
-        f = file('../bot/notes/' + filename + '.txt', 'w')
+        f = file('notes/' + filename + '.txt', 'w')
         f.write(text)
         f.close()
         return True
         
 def get(filename):
-    if not os.path.exists('../bot/notes/' + filename + '.txt'):
+    if not os.path.exists('notes/' + filename + '.txt'):
         return "File not found"
     else:
-        with open('../bot/notes/' + filename + '.txt','r') as f:
+        with open('notes/' + filename + '.txt','r') as f:
             text = f.read()
         return text

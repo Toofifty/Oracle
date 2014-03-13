@@ -7,7 +7,7 @@ from colorama import init, Fore, Back
 init(autoreset=True)
 
 import connect
-from base import *
+from base import config, ACTION_LOG
 from threads import LoopTimeThread
     
 class handler:
@@ -61,10 +61,10 @@ class handler:
             
             say = False
             for nick, val in self.FLOOD.iteritems():
-                action_log.info(Fore.RED + 'SPM ' + Fore.RESET + nick + ': ' + str(val))
+                ACTION_LOG.info(Fore.RED + 'SPM ' + Fore.RESET + nick + ': ' + str(val))
                 say = True
             if say:
-                action_log.info(Fore.RED + 'SPM' + Fore.RESET + ' Decremented FLOOD dict')
+                ACTION_LOG.info(Fore.RED + 'SPM' + Fore.RESET + ' Decremented FLOOD dict')
                 
         except:
             traceback.print_exc()
@@ -73,7 +73,7 @@ class handler:
         if val > config.get('kick'):
             connect.kick(nick, "Spamming")
             connect.say(f.YELLOW + 'User ' + f.RED + nick + f.YELLOW + ' was kicked for spamming.')
-            action_log.info(Fore.RED + 'KCK' + Fore.RESET + ' User: ' + nick + ' was kicked for spamming')
+            ACTION_LOG.info(Fore.RED + 'KCK' + Fore.RESET + ' User: ' + nick + ' was kicked for spamming')
             del self.FLOOD[nick]
             
         elif val > config.get('warn'):

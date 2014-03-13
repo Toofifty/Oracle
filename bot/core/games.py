@@ -1,14 +1,27 @@
 # -*- coding: utf-8 -*-
 
-import connect as c
 import yaml
 import random
 import time
+
+import connect as c
 import score
 from threads import TimeThread, LoopTimeThread, ParallelThread
-from base import *
+from base import config, ACTION_LOG, f
 
-class rps:
+class RockPaperScissors:
+    """ Creates a game between two users,
+    the user who ran the command and the
+    first arg of the command.
+    
+    There is currently no validation on users
+    or on amount of games going at once (gets a
+    tad buggy if somebody starts a new game whilst
+    one is already going).
+    
+    """
+
+
     def __init__(self, p1, p2):
         self.p1 = p1
         self.g1 = "none"
@@ -87,7 +100,12 @@ class rps:
         self.done = True        
         return "Somebody didn't decide!"
         
-class trivia:
+class Trivia:
+    """ Trivia class, has a timer in
+    a separate thread that initiates a new
+    round every 'trivia-interval' seconds.
+    
+    """
     def __init__(self):
         self.questions = self.load_trivia()
         self.current = ""
@@ -95,10 +113,10 @@ class trivia:
         self.trivia_time.start()
         self.f = f.WHITE + "[" + f.PURPLE + "Trivia" + f.WHITE + "] "
         self.disabled = False
-        action_log.info("Trivia initialized")
+        ACTION_LOG.info("Trivia initialized")
         
     def load_trivia(self):
-        with open('../bot/trivia.yml', 'r') as triv:
+        with open('trivia.yml', 'r') as triv:
             c = yaml.load(triv)
         return c
         
@@ -112,11 +130,14 @@ class trivia:
         
     def guess(self, guess, nick):
         if self.check(guess):
-            c.say(self.f + nick + " got the answer! +" + str(config.get('trivia-points')) + " points!")
+            c.say(self.f + nick + " got the answer! +"
+                + str(config.get('trivia-points')) + " points!")
             self.current = ""
             score.add(nick, config.get('trivia-points'))
+            
         else:
-            c.whisper(self.f + "Incorrect!", nick)
+            c.msg(self.f + "Incorrect!", nick)
+        return True
         
     def check(self, guess):
         g = str(" ".join(guess))
@@ -134,7 +155,10 @@ class trivia:
         for k in self.questions:
             n += 1
         int = config.get('trivia-interval')
-        return self.f + "Time interval: " + str(int) + " seconds (" + str(int/60) + " minutes), " + str(n) + " questions listed."
+        return (self.f
+                + "Time interval: " + str(int)
+                + " seconds (" + str(int/60) + " minutes), "
+                + str(n) + " questions listed.")
         
     def _getdisabled(self):
         return self.disabled
@@ -144,13 +168,23 @@ class trivia:
             c.say(self.f + "Nobody got it! New round.")
         self.current = self.get_question()
         self.answer = self.get_answer()
-        c.say(self.f + self.current + " (" + str(len(self.answer.split(" "))) + ")")
+        c.say(self.f + self.current
+            + " (" + str(len(self.answer.split(" "))) + ")")
         c.say(self.f + "Use ?a [answer] to answer")
         
-class rp(ParallelThread):
+class RandomPoints(ParallelThread):
+    """ RandomPoints runs on a separate
+    thread and gives out points randomly to
+    players online and users in the IRC.
+    
+    Disabled currently as it struggles to
+    read the responses from NAMES and ~players
+    correctly.
+    
+    """
     def __init__(self):
         ParallelThread.__init__(self)
-        action_log.info("Random points initialized")
+        ACTION_LOG.info("Random points initialized")
         self.users = []
         self.start()
         
@@ -173,10 +207,12 @@ class rp(ParallelThread):
         self.poll_users()
         for user in self.users:
             score.add(user, config.get('random-points'))
-        c.say("Random giveaway of points! " + str(config.get('random-points')) + " points given to:")
+        c.say("Random giveaway of points! "
+            + str(config.get('random-points'))
+            + " points given to:")
         c.say(" ".join(self.users))
             
     def sleep(self):
-        interval = random.randint(config.get('random-min-interval'),config.get('random-max-interval'))
+        interval = random.randint(  config.get('random-min-interval'),
+                                    config.get('random-max-interval'))
         time.sleep(interval)
-        

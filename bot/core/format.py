@@ -1,6 +1,10 @@
 import random
 
-class formats(object):
+class Formats:
+    """ Simple holder for all
+    shortcuts to formatting codes
+    
+    """
     def __init__(self):
         self.BOLD = "\x02"
         self.ITALICS = "\x1D"
@@ -25,8 +29,10 @@ class formats(object):
     def random(self):
         return "\x03" + str(random.randint(0, 15))
         
+# Replace occurences of charsets with proper
+# irc formatting codes
 def replace(string):
-    f = formats()
+    f = Formats()
     array = [
         ["&b", f.BOLD],
         ["&i", f.ITALICS],

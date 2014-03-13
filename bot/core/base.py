@@ -2,19 +2,19 @@ import format
 import logging
 import yaml
     
-f = format.formats()
-receive_log = logging.getLogger('receive')
-action_log = logging.getLogger('action')
-send_log = logging.getLogger('send')
+f = format.Formats()
+RECEIVE_LOG = logging.getLogger('receive')
+ACTION_LOG = logging.getLogger('action')
+SEND_LOG = logging.getLogger('send')
 
-class config:
+class Config:
     def __init__(self):
         self.load()
         
     def load(self):
         with open('config.yml', 'r') as conf_file:
             self.data = yaml.load(conf_file)
-        action_log.debug("!!! - Config loaded")
+        ACTION_LOG.debug("!!! - Config loaded")
         
     def set(self, key, value):
         self.data[key] = value
@@ -28,4 +28,4 @@ class config:
     def get(self, key):
         return self.data[key]
         
-config = config()
+config = Config()

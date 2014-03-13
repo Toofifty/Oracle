@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import format
-import connect as c
-import varcontrols as v
-import misc
 import time
 
-f = format.formats()
+import connect as c
+from varcontrols import getrank
+from misc import pick
+from base import f
 
 def get_response(nick, message):
 	if(message.lower() == "nope nope"):

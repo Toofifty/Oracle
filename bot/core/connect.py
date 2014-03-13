@@ -5,21 +5,25 @@ Oracle - Connect Script
 
 import socket
 import sys
-import json
 import os
-import spamhandler
-import yaml
-import logging
 import traceback
-from base import *
+
+from base import config, ACTION_LOG, SEND_LOG
 
 c = config
 
-class gamechat(object):
+class GameChat(object):
+    """ Class to recognise whether
+    the last message was from in-game
+    or in-irc.
+    
+    Is extremely pointless, will
+    get rid of very soon.
+    """
     def __init__(self):
         self.active = False
         
-gc = gamechat()
+gc = GameChat()
 
 def getactive():
     return gc.active
@@ -30,40 +34,58 @@ def set_active(bot):
 def set_inactive():
     gc.active = False
 
+def _send_irc(raw_msg):
+    try:
+        s.send(raw_msg)
+        SEND_LOG.debug(raw_msg)
+        return True
+    except Exception:
+        traceback.print_exc()
+    return False
+    
+# Ask for NAMES
 def getusers():
-    s.send("NAMES " + config.get('channel') + "\r\n")
-    send_log.debug("NAMES " + config.get('channel') + "\r\n")
-    
+    return _send_irc("NAMES "
+                    + config.get('channel')
+                    + "\r\n")
+                    
+# PRIVMSG a message to the channel
 def say(msg):
-    s.send("PRIVMSG " + str(config.get('channel')) + " :" + str(msg) + "\r\n")
-    send_log.debug("PRIVMSG " + str(config.get('channel')) + " :" + str(msg))
+    return _send_irc("PRIVMSG "
+                    + str(config.get('channel')) + " :" + str(msg)
+                    + "\r\n")
     
-    
-def whisper(msg, nick):
-    if not (gc.active):
-        s.send("NOTICE " + nick + " :" + str(msg) + "\r\n")
-        send_log.debug("NOTICE " + nick + " :" + str(msg))
+# PRIVMSG to a nick or NOTICE to a server bot
+def msg(msg, nick):
+    if (gc.active):
+        return _send_irc("PRIVMSG "
+                        + gc.active + " :" + nick + " " + str(msg)
+                        + "\r\n")
+        
     else:
-        s.send("PRIVMSG " + gc.active + " :" + nick + " " + str(msg) + "\r\n")
-        send_log.debug("PRIVMSG " + gc.active + " :" + nick + " " + str(msg))
+        return _send_irc("NOTICE "
+                        + nick + " :" + str(msg)
+                        + "\r\n")
     
+# KICK
 def kick(nick, reason):
-    s.send("KICK %s %s %s\r\n" % (config.get('channel'),nick, reason))
-    send_log.debug("KICK %s %s %s\r\n" % (config.get('channel'),nick, reason))
+    return _send_irc("KICK "
+                    + config.get('channel') + nick + reason
+                    + "\r\n")
 
+# Stop the bot, probably after ?close
 def stop(nick):
-    action_log.info("!!! - Stop command issued! Closing.")
+    ACTION_LOG.info("!!! - Stop command issued! Closing.")
     say("\00307\x02Goodbye!\00307\x02")
-    s.send("QUIT\r\n")
-    send_log.debug("QUIT\r\n")
-    action_log.info("!!! - " + nick +" terminated session.")
+    _send_irc("QUIT\r\n")
+    ACTION_LOG.info("!!! - " + nick +" terminated session.")
     sys.exit()
 
+# Fully restart the bot
 def restart(nick):
-    action_log.info("!!! - Restart command issued by " + nick)
+    ACTION_LOG.info("!!! - Restart command issued by " + nick)
     say("\00307\x02Restarting!\00307\x02")
-    s.send("QUIT\r\n")
-    send_log.debug("QUIT\r\n")
+    _send_irc("QUIT\r\n")
 
     args = sys.argv[:]
     args.insert(0, sys.executable)
@@ -71,37 +93,51 @@ def restart(nick):
         args = ['"%s"' % arg for arg in args]
     os.execv(sys.executable, args)
 
+# IDENTIFY to NickServ
 def identify():
-    s.send("nickserv IDENTIFY Oracle %s\r\n" % config.get('pass'))
-    send_log.debug("nickserv IDENTIFY Oracle %s" % config.get('pass'))
+    return _send_irc("nickserv IDENTIFY Oracle "
+                    + config.get('pass')
+                    + "\r\n")
 
-def ping(i):
-    s.send("PONG %s\r\n" % i)
-    send_log.debug("PONG %s\r\n" % i)
-    
+# PONG to reply to PINGs
+def ping(code):
+    return _send_irc("PONG "
+                    + code
+                    + "\r\n")
+
+# JOIN the channel
 def join():
-    s.send("JOIN %s\r\n" % config.get('channel'))
-    send_log.debug("JOIN %s" % config.get('channel'))
+    return _send_irc("JOIN "
+                    + config.get('channel')
+                    + "\r\n")
     
+# MODE flags
 def mode(args):
-    s.send("MODE " + config.get('channel') + " " + " ".join(args) + "\r\n")
-    send_log.debug("MODE " + config.get('channel') + " " + " ".join(args))
+    return _send_irc("MODE "
+                    + config.get('channel') + " " + " ".join(args)
+                    + "\r\n")
     
+# Send a completely raw message
 def raw(args):
-    s.send(" ".join(args) + "\r\n")
-    send_log.debug(" ".join(args))
+    return _send_irc(" ".join(args)
+                    + "\r\n")
     
+# Initial connect to server and channel
 def start():    
     try:
         global s
         s = socket.socket()
         s.connect((config.get('host'), config.get('port')))
-        s.send('NICK '+config.get('nick')+'\r\n')
-        s.send('USER '+config.get('ident')+' '+config.get('host')+' bla :'+config.get('realname')+'\r\n')
-        return s, c
-    except:
+        _send_irc("NICK "
+                + config.get('nick')
+                + "\r\n")
+        _send_irc("USER "
+                + config.get('ident') + " " + config.get('host')
+                + " bla :" + config.get('realname')
+                + "\r\n")
+        return s
+    except Exception:
         traceback.print_exc()
-        action_log.warning("!!! - Error! Failed to connect to " + config.get('channel') + " on " + config.get('host'))
+        ACTION_LOG.warning("!!! - Error! Failed to connect to "
+            + config.get('channel') + " on " + config.get('host'))
         return False
-        
-start()

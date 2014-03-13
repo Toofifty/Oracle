@@ -3,7 +3,7 @@ import connect
 from colorama import init, Back
 init(autoreset=True)
 
-from base import *
+from base import config
         
 def create_loggers():
     loggers = [
