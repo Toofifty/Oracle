@@ -1,80 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640" />
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
 
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
-    <title>OracleIRC by Toofifty</title>
-  </head>
+  <title>OracleIRC</title>
+  <meta name="description" content="Oracle IRC bot for #rapid, and usage of the RapidIRC plugin">
 
-  <body>
-    <a id="forkme_banner" href="https://github.com/Toofifty/Oracle">View on GitHub</a>
-    <div class="shell">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-      <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>OracleIRC</h1>
-            <h2>Oracle IRC bot for #rapid, and usage of the RapidIRC plugin</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-      </header>
+</head>
 
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/Toofifty/Oracle/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/Toofifty/Oracle/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
+<body>
 
-
-      <span class="banner-fix"></span>
-
-
-      <section id="main_content">
-        <p>As some might have known, the community has an IRC (Internet Relay Chat) channel which was never really used to it's full potential. Earlier this week, Manyman and I have been working on a plugin to integrate the server chat with the IRC, in order to broaden to a community chat where we can all be in - regardless of the game we're playing.</p>
-
-<p>If you join the IRC channel <a href="http://rapidcraftmc.com/chat.php">#rapid</a> you will find 3 strange users; Oracle, RapidSurvival and RapidCreative. Oracle is an IRC bot created by me that can be used to take notes, show smileys, and maintain the IRC. RapidSurvival and RapidCreative are 'linking' bots that connect their respective worlds with the IRC.</p>
+  <div class="wrapper">
+    <header>
+      <h1 class="title">OracleIRC</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Oracle IRC bot for #rapid, and usage of the RapidIRC plugin</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/Toofifty/Oracle/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/Toofifty/Oracle/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/Toofifty/Oracle" class="code">View OracleIRC on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <p>If you join the IRC channel <a href="http://rapidcraftmc.com/chat.php">#rapid</a> you will find 3 strange users; Oracle, RapidSurvival and RapidCreative. Oracle is an IRC bot created by me that can be used to take notes, show smileys, and maintain the IRC. RapidSurvival and RapidCreative are 'linking' bots that connect their respective worlds with the IRC.</p>
 
 <p>To use these new functions, there's a few simple commands to know which I'll be going through briefly.</p>
-
-<h1>
-<a name="commands-for-rapidirc" class="anchor" href="#commands-for-rapidirc"><span class="octicon octicon-link"></span></a>Commands for RapidIRC</h1>
-
-<p>For in-game:</p>
-
-<pre><code>    /irc list
-    /imsg [user] [message...]
-</code></pre>
-
-<p>The first command will return a list of all the users in the IRC.
-The second will private-message a user that is on the IRC channel. It still tries to send the message regardless of whether you typed the username correctly or not, yet capitalization is ignored.</p>
-
-<p>For IRC:</p>
-
-<pre><code>    /msg [RapidSurvival/RapidCreative] [user] [message...]
-</code></pre>
-
-<p>This command will private-message a user that is in-game, and play a sound to alert them. If your IRC client creates a personal chat with either of the bots, you can just use:</p>
-
-<pre><code>    [user] [message...]
-</code></pre>
-
-<p>As you are already private-messaging the bot.</p>
 
 <h1>
 <a name="oracle" class="anchor" href="#oracle"><span class="octicon octicon-link"></span></a>Oracle</h1>
@@ -101,22 +65,28 @@ The second will private-message a user that is on the IRC channel. It still trie
 <p><em>Personal</em> contains access to <code>?notes</code> and <code>?mail</code> two very useful functions in Oracle.</p>
 
 <p><em>Other</em> contains silly and maybe useless stuff.</p>
-      </section>
 
-      <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/Toofifty">Toofifty</a> can be found on <a href="https://github.com/Toofifty/Oracle">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
-      </footer>
-
+<hr><p><strong>This user documentation page is a work in progress.</strong></p>
+        </article>
+      </div>
     </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/Toofifty" class="avatar"><img src="https://1.gravatar.com/avatar/1085a9fe25b615bf20fbfbd2cd389717?d=https%3A%2F%2Fidenticons.github.com%2Fd44d6f2b902bffcd3751c66264535aeb.png&amp;r=x&amp;s=60" width="48" height="48"/></a> <a href="https://github.com/Toofifty">Toofifty</a> maintains <a href="https://github.com/Toofifty/Oracle">OracleIRC</a></p>
 
-    
-  </body>
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br/>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/Toofifty/Oracle/tarball/master" class="tar">tar</a><a href="https://github.com/Toofifty/Oracle/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
 </html>
