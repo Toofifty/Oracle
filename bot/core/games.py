@@ -3,11 +3,13 @@
 import yaml
 import random
 import time
+from colorama import init, Fore, Style
+init(autoreset=True)
 
 import connect as c
 import score
 from threads import TimeThread, LoopTimeThread, ParallelThread
-from base import config, ACTION_LOG, f
+from base import config, log, f
 
 class RockPaperScissors:
     """ Creates a game between two users,
@@ -113,7 +115,7 @@ class Trivia:
         self.trivia_time.start()
         self.f = f.WHITE + "[" + f.PURPLE + "Trivia" + f.WHITE + "] "
         self.disabled = False
-        ACTION_LOG.info("Trivia initialized")
+        log("Trivia initialized.", m_type="STARTUP", colour=Fore.CYAN)
         
     def load_trivia(self):
         with open('trivia.yml', 'r') as triv:
@@ -130,8 +132,8 @@ class Trivia:
         
     def guess(self, guess, nick):
         if self.check(guess):
-            c.say(self.f + nick + " got the answer! +"
-                + str(config.get('trivia-points')) + " points!")
+            c.say(f.GREEN + self.f + nick + f.WHITE + " got the answer! "
+                + f.ORANGE + "+" + str(config.get('trivia-points')) + " points!")
             self.current = ""
             score.add(nick, config.get('trivia-points'))
             
@@ -184,7 +186,7 @@ class RandomPoints(ParallelThread):
     """
     def __init__(self):
         ParallelThread.__init__(self)
-        ACTION_LOG.info("Random points initialized")
+        log("Random points initialized.", m_type="STARTUP", colour=Fore.CYAN)
         self.users = []
         self.start()
         

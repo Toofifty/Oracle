@@ -1,11 +1,11 @@
 # bot info, don't change
-host: 'irc.esper.net'
+host: 'localhost'
 port: 6667
 nick: 'Oracle'
 ident: 'Oracle'
 pass: 'wombat1'
 realname: 'Toofifty'
-channel: '#rapid'
+channel: '#'
 
 # admin
 # chat-log is buggy, best not to use
@@ -14,8 +14,8 @@ server-bots:
     - 'RapidSurvival'
 chat-log: false 
 console-format: '%(asctime)s %(message)s'
-receive-format: '>> [%d/%m %H:%M:%S]'
-send-format: '<< [%d/%m %H:%M:%S]'
+receive-format: '<< [%d/%m %H:%M:%S]'
+send-format: '-> [%d/%m %H:%M:%S]'
 action-format: '!! [%d/%m %H:%M:%S]'
 
 # auto actions

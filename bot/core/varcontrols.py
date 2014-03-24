@@ -5,7 +5,6 @@ Oracle - nick variable control script
 
 import os
 import json
-from pprint import pprint
 
 def makevarfile(target):
     if not(os.path.exists('../bot/users/' + target + '.json')):

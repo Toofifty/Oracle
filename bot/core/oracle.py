@@ -1,4 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
+from __future__ import print_function
 
 import string
 import traceback
@@ -7,8 +8,11 @@ import os
 import yaml
 import json
 import urllib
+import sys
+import socket
 from colorama import init, Fore, Back, Style
 init(autoreset=True)
+
 
 import connect as c
 import mail as m
@@ -28,7 +32,7 @@ import format
 import logger
 import base
 import threads
-from base import config, RECEIVE_LOG, ACTION_LOG, f
+from base import config, RECEIVE_LOG, ACTION_LOG, f, log
     
 rps = None
 trivia = None
@@ -36,6 +40,10 @@ spam = None
 ATTENTION = False
 IGNORE_LIST = []
 ACC_CHECKED = False
+
+def print(s):
+    c.say("OUT:" + s)
+    log(s, m_type="PRINT", colour=Fore.CYAN)
 
 def reload_():
     """Reload all modules except for oracle.py, connect.py and run.py
@@ -113,7 +121,7 @@ def help_(nick, args="no"):
         else:
             raise Warning
     except:
-        traceback.print_exc()
+        #traceback.print_exc()
         for line in help['default']:
             c.msg(format.replace(line), nick)
         c.msg(format.replace(help['categories'][int(rank)]), nick)
@@ -142,7 +150,7 @@ def is_white_listed(nick):
     try:
         content = urllib.urlopen(config.get('whitelist-location'))
         data = json.load(content)
-        print data
+        #print data
         for name in data:
             ACTION_LOG.info(name)
             if name == nick:
@@ -191,8 +199,10 @@ def join(nick):
             c.msg("You have no new mail.", nick)
         else:
             c.msg("You have mail! Use '?mail check' to see.", nick)
+            
+    log(nick + " joined. Rank: " + str(rank), m_type='JOIN', colour=Fore.MAGENTA)
         
-    ACTION_LOG.info(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))    
+    #ACTION_LOG.info(Fore.BLUE + "JNC" + Fore.RESET + " " + nick + " joined. Rank: " + str(rank))  
     
 def process_cmd(nick, msg):    
     """Splits the message, processes the
@@ -206,9 +216,11 @@ def process_cmd(nick, msg):
     cmd = msg.split(" ")
     rank = v.getrank(nick)
     if len(cmd) == 1:
-        ACTION_LOG.info(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | nick: " + nick)
+        log("*" + cmd[0].capitalize() + "* | nick: " + nick, m_type="COMMAND", colour=Fore.CYAN)
+        #ACTION_LOG.info(Fore.MAGENTA + "COMMAND " + Fore.RESET + " " + cmd[0] + " | nick: " + nick)
     else:
-        ACTION_LOG.info(Fore.MAGENTA + "CMD" + Fore.RESET + " " + cmd[0] + " | args: " + " ".join(cmd[1:]) + " | nick: " + nick)
+        log("*" + cmd[0].capitalize() + "* | args: " + " ".join(cmd[1:]) + " | nick: " + nick, m_type="COMMAND", colour=Fore.CYAN)
+        #ACTION_LOG.info(Fore.MAGENTA + "COMMAND " + Fore.RESET + " " + cmd[0] + " | args: " + " ".join(cmd[1:]) + " | nick: " + nick)
     
     try:
         # regular user
@@ -307,6 +319,10 @@ def process_cmd(nick, msg):
                         i += 1
                         if i > amount:
                             break
+                            
+            elif cmd[0] == "resolve":
+                data = socket.gethostbyname_ex(" ".join(cmd[1:]))
+                c.say(" ".join(cmd[1:]) + " resolved to " + repr(data[2]))
                 
             #! server !#
             elif cmd[0] == "events":
@@ -391,6 +407,13 @@ def process_cmd(nick, msg):
                 except:
                     traceback.print_exc()
                     c.msg("Usage: ?notes [new|delete|edit|listall|search|get]", nick)
+                    
+            elif cmd[0] == "eval":
+                try:
+                    sm = " ".join(cmd[1:])
+                    c.say(sm + " = " + str(eval(sm)))
+                except:
+                    traceback.print_exc()
         else:
             c.msg("Seems like you don't have access to these commands. Message an admin for help.", nick)
             
@@ -428,7 +451,7 @@ def process_cmd(nick, msg):
                 c.restart(nick)
                 
             elif cmd[0] == "reload":
-                ACTION_LOG.info(Fore.RED + "RLD" + Fore.RESET + " Reload issued by " + nick)
+                log("Reload issued by " + nick, m_type="RELOAD", colour=Fore.YELLOW, reset=False)
                 reload_()
                 c.say(f.YELLOW + "Reload complete.")
                 
@@ -587,6 +610,20 @@ def process_cmd(nick, msg):
                         traceback.print_exc()
                         c.msg("Error getting config", nick)
                         
+            elif cmd[0] == "testlog":
+                log("No string test")
+                log("Action test", l_type='action', m_type="TESTLOG", colour=Fore.GREEN)
+                if len(cmd) > 1:
+                    log(' '.join(cmd[1:]), colour=Fore.GREEN, m_type="TESTLOG")
+                    
+            elif cmd[0] == "exec":
+                try:
+                    exec " ".join(cmd[1:])
+                except:
+                    c.say(traceback.print_exc())
+                        
+    except SystemExit:
+        return
         
     except:
         # any and every error will throw this
@@ -628,8 +665,8 @@ def main(socket):
             readbuffer = readbuffer + socket.recv(1024)
         except Exception:
             # this only happens when the server throttles the connection
-            ACTION_LOG.info(Fore.RED + "THR" + Fore.RESET + " Cannot connect, throttled by server.")
-            ACTION_LOG.info(Fore.RED + "THR" + Fore.RESET + " Will try again in 20 seconds...")
+            log("Cannot connect, throttled by server.", m_type="WARNING", colour=Fore.RED, reset=False)
+            log("Will try again in 20 seconds...", m_type="WARNING", colour=Fore.RED, reset=False)
             time.sleep(20)
             # reloads the bot, rather than exit
             return True
@@ -652,7 +689,8 @@ def main(socket):
             # identify with nickserv after being prompted
             elif("NickServ!" in line[0] and line[4] == "nickname"):
                 c.identify()
-                ACTION_LOG.info(Fore.GREEN + "!!! " + Fore.WHITE + "Identified")
+                log("Identified with NickServ", m_type="NICKSERV", colour=Fore.GREEN)
+                #ACTION_LOG.info(Style.BRIGHT + Fore.CYAN + "IDENTIFY " + Fore.WHITE + "Identified")
                 
             # return of NAMES list
             elif(line[1] == "353"): 
@@ -694,8 +732,21 @@ def main(socket):
                 except:
                     nick = "null"
                     break
+					
+                id = None
+                if nick.endswith('.esper.net'):
+                    id = "ESPERNET"
+                elif nick.lower() == ('nickserv'):
+                    id = "NICKSERV"
+                elif nick.lower() == ('chanserv'):
+                    id = "CHANSERV"
                 
-                RECEIVE_LOG.info(Fore.CYAN + "MSG" + Fore.RESET + " <" + nick + "> " + msg)
+                if id is not None:
+                    log(msg, m_type=id, colour=Fore.GREEN, lg='receive')
+                    #RECEIVE_LOG.info(Style.BRIGHT + Fore.GREEN + id + " " + Fore.RESET + msg)
+                elif nick.lower() is not 'oracle':
+                    log("<" + nick + "> " + msg, m_type="MESSAGE", colour=Fore.MAGENTA, lg='receive')
+                    #RECEIVE_LOG.info(Style.BRIGHT + Fore.MAGENTA + "MESSAGE " + Fore.RESET + " <" + nick + "> " + msg)
             else:
                 # the message is bad
                 break
@@ -713,12 +764,14 @@ def main(socket):
             if config.get('spam-handler'):
                 global spam
                 if spam == None:
-                    spam = spamhandler.handler()
+                    spam = spamhandler.Handler()
                 sh = True
                 for bot in config.get('server-bots'):
                     if nick == bot:
                         sh = False
                 if nick == config.get('nick'):
+                    sh = False
+                elif nick.lower() == 'nickserv' or nick.lower() == 'chanserv':
                     sh = False
                 if sh:
                     spam.increment(nick, msg) 

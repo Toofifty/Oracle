@@ -1,8 +1,10 @@
 import oracle
+from colorama import init, Fore, Style
+init(autoreset=True)
 
 from threads import ParallelThread
 from connect import say
-from base import ACTION_LOG, config
+from base import log, config
 from format import replace
 
 class CommandLine(ParallelThread):
@@ -13,7 +15,7 @@ class CommandLine(ParallelThread):
     """
     def __init__(self):
         ParallelThread.__init__(self)
-        ACTION_LOG.info("Command line initialized")
+        log("Command line initialized.", m_type="STARTUP", colour=Fore.CYAN)
         self.start()
         
     def _runnable(self):

@@ -7,8 +7,10 @@ import socket
 import sys
 import os
 import traceback
+from colorama import init, Fore
+init(autoreset=True)
 
-from base import config, ACTION_LOG, SEND_LOG
+from base import config, log
 
 c = config
 
@@ -37,7 +39,7 @@ def set_inactive():
 def _send_irc(raw_msg):
     try:
         s.send(raw_msg)
-        SEND_LOG.debug(raw_msg)
+        log(raw_msg, m_type="RAWMESSAGE", colour=Fore.GREEN, lg='send', l_type=2)
         return True
     except Exception:
         traceback.print_exc()
@@ -75,15 +77,15 @@ def kick(nick, reason):
 
 # Stop the bot, probably after ?close
 def stop(nick):
-    ACTION_LOG.info("!!! - Stop command issued! Closing.")
+    log("Stop command issued by " + nick + " - closing.", m_type="CLOSE", colour=Fore.YELLOW, reset=False)
     say("\00307\x02Goodbye!\00307\x02")
     _send_irc("QUIT\r\n")
-    ACTION_LOG.info("!!! - " + nick +" terminated session.")
+    log(nick + " terminated the session.", m_type="CLOSE", colour=Fore.YELLOW, reset=False)
     sys.exit()
 
 # Fully restart the bot
 def restart(nick):
-    ACTION_LOG.info("!!! - Restart command issued by " + nick)
+    log("Restart command issued by " + nick + ".", m_type="RESTART", colour=Fore.YELLOW, reset=False)
     say("\00307\x02Restarting!\00307\x02")
     _send_irc("QUIT\r\n")
 
@@ -138,6 +140,5 @@ def start():
         return s
     except Exception:
         traceback.print_exc()
-        ACTION_LOG.warning("!!! - Error! Failed to connect to "
-            + config.get('channel') + " on " + config.get('host'))
+        log("Could not connect to server.", m_type="WARNING", colour=Fore.RED, reset=False)
         return False
