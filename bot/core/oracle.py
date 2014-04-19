@@ -260,7 +260,7 @@ def process_cmd(nick, msg):
             elif cmd[0] == "rps":
                 target = cmd[1]
                 global rps
-                rps = games.rps(nick, target)
+                rps = games.RockPaperScissors(nick, target)
                 c.msg(nick + " has challenged you to a game of rock, paper scissors.", target)
                 c.msg("To participate, use " + f.BLUE + "/msg Oracle ?[rock/paper/scissors] (use /imsg if you're in-game)", target)
                 c.msg("You have 30 seconds.", target)
@@ -782,19 +782,22 @@ def main(socket):
                 # change nick and msg accordingly
                 for bot in config.get('server-bots'):
                     if nick == bot:
-                        if msg.startswith("<"):
-                            nick, msg = msg.split("<",1)[1].split("> ",1)
-                            c.set_active(bot)
-                            
-                        elif msg.split(" ")[1] == "whispers":
-                            nick, msg = msg.split(" whispers ", 1)
-                            c.set_active(bot)
-                            
-                        elif msg.startswith("Online Players:"):
-                            users = msg.replace("Online Players:", "")
-                            if not users == "":
-                                randompoints.add_users(users)
-
+                        try:
+                            if msg.startswith("<"):
+                                nick, msg = msg.split("<",1)[1].split("> ",1)
+                                c.set_active(bot)
+                                
+                            elif msg.split(" ")[1] == "whispers":
+                                nick, msg = msg.split(" whispers ", 1)
+                                c.set_active(bot)
+                                
+                            elif msg.startswith("Online Players:"):
+                                users = msg.replace("Online Players:", "")
+                                if not users == "":
+                                    randompoints.add_users(users)
+                        except IndexError:
+                            pass
+                                    
                 # handle sudo commands
                 if msg.startswith(str(config.get('sudo-char'))) and v.getrank(nick) >= 4:
                     msg = msg.replace(config.get('sudo-char'),"")
